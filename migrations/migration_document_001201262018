@@ -1,0 +1,3 @@
+ALTER TABLE `btimeapp_prod`.`document` CHANGE COLUMN `name` `caption` VARCHAR(255) NOT NULL;
+
+ALTER TABLE `btimeapp_prod`.`document` CHANGE COLUMN `caption` `caption` VARCHAR(255) NULL;
