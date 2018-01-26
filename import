@@ -1,0 +1,14 @@
+#!/bin/bash
+
+source ".env"
+
+constructor () {
+	filename=$1
+	if [ -f $filename ]; then
+		$(mysql -u $DATABASE_USER -h $DATABASE_HOST -p$DATABASE_PASS $DATABASE_NAME < $filename)
+	else
+		echo "Migration file does't exist"
+	fi
+}
+
+constructor $1

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+constructor () {
+	now=$(date +"%M%H%m%d%Y");
+	filepath="./migrations/migration_$1_$now";
+	if [ -f $filepath ]; then
+		echo "File already exists"
+	else
+		touch $filepath;
+		echo "$filepath created"
+	fi
+}
+
+constructor $1
