@@ -1,4 +1,4 @@
-CREATE TABLE `btimeapp_prod`.`address` (
+CREATE TABLE `address` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `search` TEXT NULL DEFAULT NULL,
   `postcode` VARCHAR(10) NOT NULL,
