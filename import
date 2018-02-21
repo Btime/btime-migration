@@ -2,7 +2,9 @@
 
 source ".env"
 
-constructor () {
+# @Function: migration
+# @Param: $1 (filename)
+migration () {
 	filename=$1
 	flag=""
 
@@ -10,13 +12,33 @@ constructor () {
 		flag="--sql"
 	fi
 
-	echo "mysql $flag -u $DATABASE_USER -h $DATABASE_HOST -p$DATABASE_PASS $DATABASE_NAME < $filename"
+	echo "Try to Execute Migration [$filename]"
 
-	# if [ -f $filename ]; then
-	# 	$(mysql $flag -u $DATABASE_USER -h $DATABASE_HOST -p$DATABASE_PASS $DATABASE_NAME < $filename)
-	# else
-	# 	echo "Migration file does't exist"
-	# fi
+	if [ -f $filename ]; then
+		output=$(mysql $flag -u $DATABASE_USER -h $DATABASE_HOST -p$DATABASE_PASS -D $DATABASE_NAME < $filename)
+	else
+		echo "Migration file does't exist"
+	fi
 }
 
-constructor $1
+# @Function: constructor
+# @Param: $1 (filename or folder)
+# @Param: $2 (all or empty)
+constructor () {
+	filepath=$1
+	filename=$1
+	command=$2
+
+	if [[ "$command" == "all" ]]; then
+		FILES="$filepath/*"
+		for file in $FILES; do
+			migration $file
+		done
+		exit 0
+	fi
+
+	migration $filename
+	exit 0
+}
+
+constructor $1 $2
