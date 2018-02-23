@@ -1,0 +1,25 @@
+CREATE TABLE IF NOT EXISTS `contributor_document` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `contributor_id` int(11) DEFAULT NULL,
+  `document_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `provider_id` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `enabled` tinyint(1) NOT NULL DEFAULT '1',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `IDX_USER_TABLE_CONTRIBUTOR_DOCUMENT` (`user_id`),
+  KEY `IDX_PROVIDER_TABLE_CONTRIBUTOR_DOCUMENT` (`provider_id`),
+  KEY `IDX_CONTRIBUTOR_TABLE_CONTRIBUTOR_DOCUMENT` (`contributor_id`),
+  KEY `IDX_DOCUMENT_TABLE_CONTRIBUTOR_DOCUMENT` (`document_id`),
+  CONSTRAINT `FK_USER_TABLE_CONTRIBUTOR_DOCUMENT` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `FK_PROVIDER_TABLE_CONTRIBUTOR_DOCUMENT` FOREIGN KEY (`provider_id`) REFERENCES `provider` (`id`),
+  CONSTRAINT `FK_CONTRIBUTOR_TABLE_CONTRIBUTOR_DOCUMENT` FOREIGN KEY (`contributor_id`) REFERENCES `contributor` (`id`),
+  CONSTRAINT `FK_DOCUMENT_TABLE_CONTRIBUTOR_DOCUMENT` FOREIGN KEY (`document_id`) REFERENCES `document` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO contributor_document
+  (contributor_id, document_id, created_at, updated_at)
+VALUES
+  (1, 1, NOW(), NOW());
