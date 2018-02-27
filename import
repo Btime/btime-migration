@@ -17,7 +17,7 @@ migration () {
 	if [ -f $filename ]; then
 		output=$(mysql $flag -u $DATABASE_USER -h $DATABASE_HOST -p$DATABASE_PASS -D $DATABASE_NAME < $filename)
 	else
-		echo "Migration file does't exist"
+		echo "Migration file doesn't exist"
 	fi
 }
 
