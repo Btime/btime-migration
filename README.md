@@ -2,6 +2,10 @@
 
 ## Usage
 
+### Copy enviroment file and change local configuration
+
+	cp .env.dist .env
+
 ### Example of how to generate a migration:
 
 	./generate table_name
