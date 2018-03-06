@@ -1,0 +1,2 @@
+ALTER TABLE `contributor`
+CHANGE COLUMN `specialities_id` `specialities_id` INT(11) NULL;
