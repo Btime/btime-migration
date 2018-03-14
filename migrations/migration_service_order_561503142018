@@ -1,0 +1,8 @@
+ALTER TABLE `service_order`
+CHANGE COLUMN `id_by_provider` `id_by_provider` INT(11) NULL ;
+
+ALTER TABLE `service_order`
+ADD COLUMN `address_id` INT(11) DEFAULT NULL;
+
+ALTER TABLE `service_order`
+ADD FOREIGN KEY (`address_id`) REFERENCES `address` (`id`);
