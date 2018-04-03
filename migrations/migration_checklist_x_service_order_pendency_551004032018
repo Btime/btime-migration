@@ -1,0 +1,22 @@
+CREATE TABLE `check_list_x_service_order_pendency` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `service_order_pendency_id` int(11) DEFAULT NULL,
+  `check_list_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `provider_id` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `enabled` tinyint(1) NOT NULL DEFAULT '1',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
+  `id_by_provider` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `IDX_204593C74E9360F` (`service_order_pendency_id`),
+  KEY `IDX_204593C7BB2580F` (`check_list_id`),
+  KEY `IDX_204593CA76ED39F` (`user_id`),
+  KEY `IDX_204593CA53A8AF` (`provider_id`),
+  CONSTRAINT `FK_204593CA53A8AF` FOREIGN KEY (`provider_id`) REFERENCES `provider` (`id`),
+  CONSTRAINT `FK_204593CA76ED39F` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `IDX_204593C74E9360F` FOREIGN KEY (`service_order_pendency_id`) REFERENCES `service_order_pendency` (`id`),
+  CONSTRAINT `IDX_204593C7BB2580F` FOREIGN KEY (`check_list_id`) REFERENCES `check_list` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=61412 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
