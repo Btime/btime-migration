@@ -1,0 +1,3 @@
+INSERT INTO `btimeapp_prod`.`check_list_type` (`id`, `name`, `type`, `created_at`, `enabled`, `deleted`, `ordination`) VALUES ('15', 'check_list_type.location', 'location', '2018-04-03 18:00:00', '1', '0', '0');
+UPDATE `btimeapp_prod`.`check_list_type` SET `name`='check_list_type.system_status' WHERE `id`='14';
+
