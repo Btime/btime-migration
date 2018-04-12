@@ -8,6 +8,7 @@ constructor () {
 	else
 		touch $filepath;
 		echo "$filepath created"
+		nano $filepath;
 	fi
 }
 
