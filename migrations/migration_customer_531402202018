@@ -1,3 +1,2 @@
-ALTER TABLE `btimeapp`.`customer` 
+ALTER TABLE `customer`
 CHANGE COLUMN `id_by_provider` `id_by_provider` INT(11) NULL ;
-
