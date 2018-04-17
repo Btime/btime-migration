@@ -1,0 +1,1 @@
+ALTER TABLE service_order DROP COLUMN document_id;
