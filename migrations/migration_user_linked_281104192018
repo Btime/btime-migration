@@ -1,0 +1,10 @@
+ALTER TABLE `user_linked`
+ADD COLUMN `created_at` datetime,
+ADD COLUMN `updated_at` datetime DEFAULT NULL,
+ADD COLUMN `enabled` tinyint(1) NOT NULL DEFAULT '1',
+ADD COLUMN `deleted` tinyint(1) NOT NULL DEFAULT '0';
+
+UPDATE user_linked SET created_at = now() WHERE id >= 1;
+
+ALTER TABLE `user_linked`
+CHANGE COLUMN `created_at` `created_at` datetime NOT NULL;
