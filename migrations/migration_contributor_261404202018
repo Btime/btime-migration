@@ -1,0 +1,13 @@
+UPDATE
+				contributor
+SET
+				contributor.genre = 'FEMALE'
+WHERE
+				contributor.genre IN ('Female', 'Feminino');
+                
+UPDATE
+				contributor
+SET
+				contributor.genre = 'MALE'
+WHERE
+				contributor.genre IN ('Male', 'Masculino');
