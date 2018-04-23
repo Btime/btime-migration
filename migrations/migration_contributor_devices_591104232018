@@ -1,0 +1,15 @@
+CREATE TABLE `contributor_devices` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `contributor_id` int(11) DEFAULT NULL,
+  `provider_id` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `enabled` tinyint(1) NOT NULL DEFAULT '1',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `IDX_PROVIDER_TABLE_CONTRIBUTOR_DEVICES` (`provider_id`),
+  KEY `IDX_CONTRIBUTOR_TABLE_CONTRIBUTOR_DEVICES` (`contributor_id`),
+  CONSTRAINT `FK_CONTRIBUTOR_TABLE_CONTRIBUTOR_DEVICES` FOREIGN KEY (`contributor_id`) REFERENCES `contributor` (`id`),
+  CONSTRAINT `FK_PROVIDER_TABLE_CONTRIBUTOR_DEVICES` FOREIGN KEY (`provider_id`) REFERENCES `provider` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
