@@ -1,0 +1,5 @@
+ALTER TABLE `provider`
+DROP FOREIGN KEY `provider_ibfk_2`;
+
+ALTER TABLE `provider`
+DROP `address_id`;
