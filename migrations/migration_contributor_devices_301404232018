@@ -1,0 +1,15 @@
+ALTER TABLE `btimeapp_prod`.`contributor_devices` 
+DROP FOREIGN KEY `FK_CONTRIBUTOR_TABLE_CONTRIBUTOR_DEVICES`,
+DROP FOREIGN KEY `FK_PROVIDER_TABLE_CONTRIBUTOR_DEVICES`;
+ALTER TABLE `btimeapp_prod`.`contributor_devices` 
+CHANGE COLUMN `contributor_id` `contributor_id` INT(11) NOT NULL ,
+CHANGE COLUMN `provider_id` `provider_id` INT(11) NOT NULL ,
+ADD COLUMN `device` TEXT NOT NULL AFTER `id`;
+ALTER TABLE `btimeapp_prod`.`contributor_devices` 
+ADD CONSTRAINT `FK_CONTRIBUTOR_TABLE_CONTRIBUTOR_DEVICES`
+  FOREIGN KEY (`contributor_id`)
+  REFERENCES `btimeapp_prod`.`contributor` (`id`),
+ADD CONSTRAINT `FK_PROVIDER_TABLE_CONTRIBUTOR_DEVICES`
+  FOREIGN KEY (`provider_id`)
+  REFERENCES `btimeapp_prod`.`provider` (`id`);
+
