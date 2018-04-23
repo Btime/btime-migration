@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS `service_order_address` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `slug` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `service_order_id` int(11) DEFAULT NULL,
+  `address_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `provider_id` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `enabled` tinyint(1) NOT NULL DEFAULT '1',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `IDX_USER_TABLE_SERVICE_ORDER_ADDRESS` (`user_id`),
+  KEY `IDX_PROVIDER_TABLE_SERVICE_ORDER_ADDRESS` (`provider_id`),
+  KEY `IDX_SERVICE_ORDER_TABLE_SERVICE_ORDER_ADDRESS` (`service_order_id`),
+  KEY `IDX_ADDRESS_TABLE_SERVICE_ORDER_ADDRESS` (`address_id`),
+  CONSTRAINT `FK_USER_TABLE_SERVICE_ORDER_ADDRESS` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `FK_PROVIDER_TABLE_SERVICE_ORDER_ADDRESS` FOREIGN KEY (`provider_id`) REFERENCES `provider` (`id`),
+  CONSTRAINT `FK_SERVICE_ORDER_TABLE_SERVICE_ORDER_ADDRESS` FOREIGN KEY (`service_order_id`) REFERENCES `service_order` (`id`),
+  CONSTRAINT `FK_ADDRESS_TABLE_SERVICE_ORDER_ADDRESS` FOREIGN KEY (`address_id`) REFERENCES `address` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
