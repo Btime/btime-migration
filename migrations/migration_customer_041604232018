@@ -1,0 +1,5 @@
+ALTER TABLE `customer`
+DROP FOREIGN KEY `customer_ibfk_2`;
+
+ALTER TABLE `customer`
+DROP `address_id`;
