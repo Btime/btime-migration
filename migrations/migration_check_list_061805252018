@@ -1,0 +1,8 @@
+ALTER TABLE check_list
+ADD COLUMN allow_null tinyint(1) NULL;
+
+ALTER TABLE check_list
+ADD COLUMN photo_required tinyint(1) NULL;
+
+ALTER TABLE check_list
+ADD COLUMN annotation_required tinyint(1) NULL;
