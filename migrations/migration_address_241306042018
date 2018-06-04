@@ -1,0 +1,2 @@
+ALTER TABLE `address`
+CHANGE COLUMN `postcode` `postcode` VARCHAR(10) DEFAULT NULL;
