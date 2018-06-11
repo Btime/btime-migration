@@ -1,0 +1,24 @@
+CREATE TABLE `contributor_refund_document` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `contributor_refund_id` int(11) DEFAULT NULL,
+  `document_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `provider_id` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `enabled` tinyint(1) NOT NULL DEFAULT '1',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `IDX_USER_TABLE_CONTRIBUTOR_REFUND_DOCUMENT` (`user_id`),
+  KEY `IDX_PROVIDER_TABLE_CONTRIBUTOR_REFUND_DOCUMENT` (`provider_id`),
+  KEY `IDX_CONTRIBUTOR_REFUND_TABLE_CONTRIBUTOR_REFUND_DOCUMENT` (`contributor_refund_id`),
+  KEY `IDX_DOCUMENT_TABLE_CONTRIBUTOR_REFUND_DOCUMENT` (`document_id`),
+  CONSTRAINT `FK_CONTRIBUTOR_REFUND_TABLE_CONTRIBUTOR_REFUND_DOCUMENT`
+    FOREIGN KEY (`contributor_refund_id`) REFERENCES `contributor_refund` (`id`),
+  CONSTRAINT `FK_DOCUMENT_TABLE_CONTRIBUTOR_REFUND_DOCUMENT`
+    FOREIGN KEY (`document_id`) REFERENCES `document` (`id`),
+  CONSTRAINT `FK_PROVIDER_TABLE_CONTRIBUTOR_REFUND_DOCUMENT`
+    FOREIGN KEY (`provider_id`) REFERENCES `provider` (`id`),
+  CONSTRAINT `FK_USER_TABLE_CONTRIBUTOR_REFUND_DOCUMENT`
+    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
