@@ -1,0 +1,5 @@
+ALTER TABLE `contributor_refund`
+ADD COLUMN `service_order_id` INT(11) NULL DEFAULT NULL;
+
+ALTER TABLE `contributor_refund`
+ADD FOREIGN KEY (`service_order_id`) REFERENCES `service_order` (`id`);
