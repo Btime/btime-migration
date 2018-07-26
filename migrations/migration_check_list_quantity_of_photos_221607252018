@@ -1,0 +1,3 @@
+ALTER TABLE `check_list`
+ADD COLUMN `quantity_of_photos` INT(11) NULL;
+
