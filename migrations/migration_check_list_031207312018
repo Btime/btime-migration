@@ -1,0 +1,2 @@
+ALTER TABLE check_list
+ADD COLUMN photos_from_gallery tinyint(1) NULL;
