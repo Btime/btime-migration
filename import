@@ -8,14 +8,10 @@ migration () {
 	filename=$1
 	flag=""
 
-	if [[ "$OSTYPE" == "darwin"* ]]; then
-		flag="--sql"
-	fi
-
 	echo "Try to Execute Migration [$filename]"
 
 	if [ -f $filename ]; then
-		output=$(mysql $flag -u $DATABASE_USER -h $DATABASE_HOST -p$DATABASE_PASS -D $DATABASE_NAME < $filename)
+		output=$(export PGPASSWORD="$DATABASE_PASS" && psql -U $DATABASE_USER -h $DATABASE_HOST -d $DATABASE_NAME < $filename)
 	else
 		echo "Migration file doesn't exist"
 	fi
