@@ -1,2 +1,0 @@
-ALTER TABLE `reply`
-CHANGE COLUMN `reply` `reply` JSON DEFAULT NULL;

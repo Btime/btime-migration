@@ -1,2 +1,0 @@
-ALTER TABLE `contributor`
-CHANGE `cpf` `nationalRegistration` varchar(11);

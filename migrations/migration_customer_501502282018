@@ -1,5 +1,0 @@
-ALTER TABLE `customer`
-ADD COLUMN `avatar_id` INT(11) NULL DEFAULT NULL;
-
-ALTER TABLE `customer`
-ADD FOREIGN KEY (`avatar_id`) REFERENCES `document` (`id`);

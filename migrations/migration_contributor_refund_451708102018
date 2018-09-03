@@ -1,2 +1,0 @@
-ALTER TABLE contributor_refund
-ADD COLUMN paid tinyint(1) NOT NULL;

@@ -1,8 +1,0 @@
-ALTER TABLE `contributor_refund`
-CHANGE COLUMN `id_by_provider` `id_by_provider` INT(11) NULL ;
-
-ALTER TABLE `contributor_refund`
-ADD COLUMN `document_id` INT(11) NULL DEFAULT NULL;
-
-ALTER TABLE `contributor_refund`
-ADD FOREIGN KEY (`document_id`) REFERENCES `document` (`id`);

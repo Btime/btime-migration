@@ -1,2 +1,0 @@
-ALTER TABLE `check_list`
-ADD COLUMN `category_ordination` INT(11) NULL;

@@ -1,5 +1,0 @@
-ALTER TABLE `contributor`
-CHANGE `stateRegistration` `state_registration` varchar(32);
-
-ALTER TABLE `contributor`
-CHANGE `nationalRegistration` `national_registration` varchar(11);

@@ -1,2 +1,0 @@
-ALTER TABLE `reply_document`
-ADD COLUMN `description` VARCHAR(255) NULL DEFAULT NULL;

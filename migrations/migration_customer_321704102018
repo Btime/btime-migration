@@ -1,4 +1,0 @@
-ALTER TABLE `btimeapp_prod`.`customer` 
-CHANGE COLUMN `headquarter` `headquarter` TINYINT(1) NOT NULL DEFAULT 0 ,
-CHANGE COLUMN `id_by_provider` `id_by_provider` INT(11) NULL ;
-

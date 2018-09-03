@@ -1,2 +1,0 @@
-ALTER TABLE `provider`
-CHANGE COLUMN `id_by_provider` `id_by_provider` LONGTEXT NULL DEFAULT NULL ;

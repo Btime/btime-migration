@@ -1,2 +1,0 @@
-UPDATE customer SET customer.type = 'cnpj'  WHERE type = 'company';
-UPDATE customer SET customer.type = 'cpf'  WHERE type = 'individual';

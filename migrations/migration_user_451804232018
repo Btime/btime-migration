@@ -1,7 +1,0 @@
-ALTER TABLE `btimeapp_prod`.`user` 
-CHANGE COLUMN `username_canonical` `username_canonical` VARCHAR(180) CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' NULL ,
-CHANGE COLUMN `email_canonical` `email_canonical` VARCHAR(180) CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' NULL ,
-CHANGE COLUMN `roles` `roles` LONGTEXT CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' NULL COMMENT '(DC2Type:array)' ,
-CHANGE COLUMN `locale` `locale` VARCHAR(10) CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' NULL DEFAULT 'en' ,
-CHANGE COLUMN `timezone` `timezone` VARCHAR(50) CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' NULL DEFAULT 'America/Sao_Paulo' ;
-

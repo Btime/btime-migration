@@ -1,2 +1,0 @@
-ALTER TABLE `contributor`
-CHANGE COLUMN `national_registration` `national_registration` varchar(15) NULL;

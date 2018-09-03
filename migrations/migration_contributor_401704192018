@@ -1,2 +1,0 @@
-ALTER TABLE `btimeapp_prod`.`contributor` 
-ADD COLUMN `user_token` VARCHAR(255) NULL DEFAULT NULL;

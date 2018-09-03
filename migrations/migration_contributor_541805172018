@@ -1,2 +1,0 @@
-ALTER TABLE `contributor`
-CHANGE `rg` `stateRegistration` varchar(32);
