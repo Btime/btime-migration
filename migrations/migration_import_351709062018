@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS public."import" (
+  "id" SERIAL,
+  "entity" CHARACTER VARYING(255) NOT NULL,
+  "createdById" INTEGER,
+  "deletedById" INTEGER,
+  "enabled" BOOLEAN NOT NULL default true,
+  "deleted" BOOLEAN NOT NULL default false,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL,
+  "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
+ALTER TABLE ONLY public."import"
+  ADD CONSTRAINT import_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public."import"
+  ADD CONSTRAINT "import_createdById_fkey" FOREIGN KEY ("createdById")
+  REFERENCES public."user"(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+ALTER TABLE ONLY public."import"
+  ADD CONSTRAINT "import_deletedById_fkey" FOREIGN KEY ("deletedById")
+  REFERENCES public."user"(id) ON UPDATE CASCADE ON DELETE SET NULL;
