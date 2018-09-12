@@ -1,0 +1,30 @@
+CREATE TABLE IF NOT EXISTS public."importDocument" (
+  "id" SERIAL,
+  "importId" INTEGER,
+  "documentId" INTEGER,
+  "createdById" INTEGER,
+  "deletedById" INTEGER,
+  "enabled" BOOLEAN NOT NULL default true,
+  "deleted" BOOLEAN NOT NULL default false,
+  "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL,
+  "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
+ALTER TABLE ONLY public."importDocument"
+  ADD CONSTRAINT importDocument_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public."importDocument"
+  ADD CONSTRAINT "importDocument_importId_fkey" FOREIGN KEY ("importId")
+  REFERENCES public."import"(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+ALTER TABLE ONLY public."importDocument"
+  ADD CONSTRAINT "importDocument_documentId_fkey" FOREIGN KEY ("documentId")
+  REFERENCES public."document"(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+ALTER TABLE ONLY public."importDocument"
+  ADD CONSTRAINT "importDocument_createdById_fkey" FOREIGN KEY ("createdById")
+  REFERENCES public."user"(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+ALTER TABLE ONLY public."importDocument"
+  ADD CONSTRAINT "importDocument_deletedById_fkey" FOREIGN KEY ("deletedById")
+  REFERENCES public."user"(id) ON UPDATE CASCADE ON DELETE SET NULL;
