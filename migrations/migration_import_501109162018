@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS public."import" (
   "id" SERIAL,
   "entity" CHARACTER VARYING(255) NOT NULL,
+  "templateId" INTEGER,
   "createdById" INTEGER,
   "deletedById" INTEGER,
   "enabled" BOOLEAN NOT NULL default true,
@@ -11,6 +12,10 @@ CREATE TABLE IF NOT EXISTS public."import" (
 
 ALTER TABLE ONLY public."import"
   ADD CONSTRAINT import_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public."import"
+  ADD CONSTRAINT "import_templateId_fkey" FOREIGN KEY ("templateId")
+  REFERENCES public."importTemplate"(id) ON UPDATE CASCADE ON DELETE SET NULL;
 
 ALTER TABLE ONLY public."import"
   ADD CONSTRAINT "import_createdById_fkey" FOREIGN KEY ("createdById")
