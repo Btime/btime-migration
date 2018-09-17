@@ -1,0 +1,36 @@
+{
+  "name": "btime-migration",
+  "version": "1.0.0",
+  "description": "## Usage",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Btime/btime-migration.git"
+  },
+  "author": "Btime Team (team@btime.io)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Btime/btime-migration/issues"
+  },
+  "homepage": "https://github.com/Btime/btime-migration#readme",
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "moment": "^2.22.2",
+    "yargs": "^12.0.2"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint": "^5.5.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-mocha": "^5.2.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "husky": "^0.14.3",
+    "mocha": "^5.2.0"
+  }
+}
