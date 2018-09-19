@@ -1,10 +1,8 @@
 /* eslint-env mocha */
 
-const chai = require('chai')
-const expect = chai.expect
+const { expect } = require('chai')
 const { exec } = require('child_process')
-const path = require('path')
-const generate = path.join(__dirname, '../bin/generate')
+const generate = require('path').join(__dirname, '../bin/generate')
 
 describe('Generate tests', () => {
   it('Expect to not generate file migration', (done) => {
