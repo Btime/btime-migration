@@ -1,6 +1,7 @@
 .env
 \.env
 .idea/
+.vscode/
 /migrations*
 !migrations/sql/.gitkeep
 !migrations/nonsql/.gitkeep
