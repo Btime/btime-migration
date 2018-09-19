@@ -26,7 +26,7 @@ module.exports.generate = () => {
       const fileExtension = argv.type === 'nonsql' ? '.json' : '.sql'
       const file = path.join(
         __dirname,
-        '..',
+        '../..',
         'migrations',
         argv.t,
         'Version' + moment().format('YYYYMMDDHHmmssSSS') + fileExtension

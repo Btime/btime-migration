@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { generate } = require('../src/generate')
+const { generate } = require('../src/generate/generate')
 
 generate()
   .then(file => console.log(`Generated new migration file to \x1b[32m"%s"\x1b[0m`, file))

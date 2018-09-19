@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { migrate } = require('./../src/migrate')
+const { migrate } = require('./../src/migrate/migrate')
 
 migrate()
   .then((response) => console.log(response))
