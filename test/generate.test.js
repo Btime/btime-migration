@@ -16,11 +16,9 @@ describe('Generate tests', () => {
 
   it('Expect to not generate invalid file migration', (done) => {
     exec(generate + ' -t invalid', (error, stdout, stderr) => {
-      const invalidErrorMessage = '\u001b[31mError: Invalid type format\u001b[0m\n'
-      expect(error).to.be.equal(null)
-      expect(stdout.length).to.not.be.equal(0)
-      expect(stdout).to.be.equal(invalidErrorMessage)
-      expect(stderr.length).to.be.equal(0)
+      expect(error).to.not.equal(null)
+      expect(stdout.length).to.be.equal(0)
+      expect(stderr.length).to.not.equal(0)
       done(null)
     })
   })
@@ -31,7 +29,7 @@ describe('Generate tests', () => {
       expect(stdout.length).to.not.be.equal(0)
       expect(stderr.length).to.be.equal(0)
 
-      const expectFileFormat = '.sql'
+      const expectFileFormat = '.js'
       const parts = stdout.split('/')
       expect(parts[parts.length - 1].indexOf(expectFileFormat))
         .to.not.be.equal(-1)
@@ -46,7 +44,7 @@ describe('Generate tests', () => {
       expect(stdout.length).to.not.be.equal(0)
       expect(stderr.length).to.be.equal(0)
 
-      const expectFileFormat = '.json'
+      const expectFileFormat = '.js'
       const parts = stdout.split('/')
       expect(parts[parts.length - 1].indexOf(expectFileFormat))
         .to.not.be.equal(-1)
