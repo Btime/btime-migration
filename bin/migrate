@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+require('dotenv').config()
 
 const { migrate } = require('./../src/migrate/migrate')
 
