@@ -1,11 +1,31 @@
 /* eslint-env mocha */
 
+require('dotenv').config()
+
+const fs = require('fs')
+const path = require('path')
 const { expect } = require('chai')
 const { exec } = require('child_process')
-const migrate = require('path').join(__dirname, '..', 'bin/migrate')
+const migrate = path.join(__dirname, '..', 'bin/migrate')
 
 describe('Migrate tests', () => {
-  it('Expect not to migrate without required arguments', (done) => {
+  it('Expect environment file (.env) to exist', (done) => {
+    fs.access(path.join(__dirname, '..', '.env'), fs.constants.F_OK, (err) => {
+      expect(err).to.equal(null)
+      done(null)
+    })
+  })
+
+  it('Expect required environment variables to be set', (done) => {
+    expect(process.env.SQL_URI.length).to.be.gt(0)
+    expect(process.env.NONSQL_URI.length).to.be.gt(0)
+    expect(process.env.MULTIPLE_URI.length).to.be.gt(0)
+    expect(process.env.MULTIPLE_COLLECTION.length).to.be.gt(0)
+    expect(process.env.MULTIPLE_COLLECTION_COLUMN.length).to.be.gt(0)
+    done(null)
+  })
+
+  it('Expect failure without required arguments', (done) => {
     exec(`${migrate}`, (err, stdout, stderr) => {
       expect(err).to.not.equal(null)
       expect(stdout.length).to.equal(0)
@@ -14,11 +34,38 @@ describe('Migrate tests', () => {
     })
   })
 
-  it('Expect not to migrate when database type is invalid', (done) => {
+  it('Expect failure when database type is invalid', (done) => {
     exec(`${migrate} -t invalid`, (err, stdout, stderr) => {
       expect(err).to.not.equal(null)
       expect(stdout.length).to.equal(0)
       expect(stderr.length).to.not.equal(0)
+      done(null)
+    })
+  })
+
+  it('Expect failure when the "multiple" option is invalid', (done) => {
+    exec(`${migrate} -t sql -m not-supported`, (err, stdout, stderr) => {
+      expect(err).to.not.equal(null)
+      expect(stdout.length).to.equal(0)
+      expect(stderr.length).to.not.equal(0)
+      done(null)
+    })
+  })
+
+  it('Expect failure when using the "multiple" flag as boolean option', (done) => {
+    exec(`${migrate} -t sql -m`, (err, stdout, stderr) => {
+      expect(err).to.not.equal(null)
+      expect(stdout.length).to.equal(0)
+      expect(stderr.length).to.not.equal(0)
+      done(null)
+    })
+  })
+
+  it('Expect type parameter to accept only one value (last)', (done) => {
+    exec(`${migrate} -t sql -t nonsql`, (err, stdout, stderr) => {
+      expect(err).to.equal(null)
+      expect(stdout.length).to.not.equal(0)
+      expect(stderr.length).to.equal(0)
       done(null)
     })
   })
@@ -42,6 +89,15 @@ describe('Migrate tests', () => {
       expect(err).to.equal(null)
       expect(stderr.length).to.equal(0)
       expect(stdout.length).not.to.equal(0)
+      done(null)
+    })
+  })
+
+  it('Expect type to match when utilizing the "multiple" option', (done) => {
+    exec(`${migrate} -t sql -m nonsql`, (err, stdout, stderr) => {
+      expect(err).to.not.equal(null)
+      expect(stdout.length).to.equal(0)
+      expect(stderr.length).to.not.equal(0)
       done(null)
     })
   })
