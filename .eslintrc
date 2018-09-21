@@ -71,6 +71,7 @@
       "module.exports"
     ],
     "no-process-exit": "off",
-    "promise/no-callback-in-promise": "off"
+    "promise/no-callback-in-promise": "off",
+    "node/shebang": "off"
   }
 }
