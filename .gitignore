@@ -2,6 +2,7 @@
 \.env
 .idea/
 .vscode/
+.nyc_output/
 /migrations*
 !migrations/sql/.gitkeep
 !migrations/nonsql/.gitkeep

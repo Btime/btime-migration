@@ -2,9 +2,22 @@
   "name": "btime-migration",
   "version": "1.0.0",
   "description": "## Usage",
-  "main": "index.js",
+  "engines": {
+    "node": ">=8.9.0"
+  },
+  "files": [
+    "src"
+  ],
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --exit",
+    "fixStyle": "./node_modules/eslint/bin/eslint.js ./ --fix",
+    "coverage": "nyc mocha --timeout 555555 --exit"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "./node_modules/eslint/bin/eslint.js ./",
+      "pre-push": "npm test"
+    }
   },
   "repository": {
     "type": "git",
@@ -20,6 +33,9 @@
     "dotenv": "^6.0.0",
     "fs": "0.0.1-security",
     "moment": "^2.22.2",
+    "pg": "^7.4.3",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.38.1",
     "yargs": "^12.0.2"
   },
   "yargs": {
@@ -27,6 +43,7 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
+    "chalk": "^2.4.1",
     "eslint": "^5.5.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.14.0",
@@ -35,6 +52,7 @@
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
     "husky": "^0.14.3",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "nyc": "^13.0.1"
   }
 }
