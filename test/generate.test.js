@@ -54,7 +54,7 @@ describe('Generate tests', () => {
     })
   })
 
-  it.only('Expect to generate file with stub (default) content', (done) => {
+  it('Expect to generate file with stub (default) content', (done) => {
     exec(`${generate} -t sql`, (error, stdout, stderr) => {
       expect(error).to.equal(null)
       expect(stdout.length).to.not.equal(0)
