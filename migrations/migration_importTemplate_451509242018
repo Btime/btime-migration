@@ -1,0 +1,3 @@
+ALTER TABLE public."importTemplate" ADD "documentTemplate" JSON NULL;
+
+ALTER TABLE public."importTemplate" ADD "entity" CHARACTER VARYING(255) NULL;
