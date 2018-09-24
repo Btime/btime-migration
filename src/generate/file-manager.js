@@ -12,10 +12,14 @@ module.exports.create = (argv) => {
   return new Promise((resolve, reject) => {
     const file = resolveFilePath(argv)
 
-    fs.appendFile(file, '', function (err) {
-      if (err) reject(err)
+    fs.readFile(`${__dirname}/stub.js`, (error, content) => {
+      if (error) return reject(error)
 
-      resolve(file)
+      fs.appendFile(file, content, function (err) {
+        if (err) return reject(err)
+
+        return resolve(file)
+      })
     })
   })
 }

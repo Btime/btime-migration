@@ -6,12 +6,12 @@ const FileManager = require('./file-manager')
 module.exports.generate = () => {
   return new Promise((resolve, reject) => {
     try {
-      FileManager
+      return FileManager
         .create(argv)
-        .then(file => resolve(file))
-        .catch(err => reject(err))
+        .then(resolve)
+        .catch(reject)
     } catch (err) {
-      reject(err)
+      return reject(err)
     }
   })
 }

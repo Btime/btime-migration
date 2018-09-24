@@ -2,6 +2,7 @@
 
 const { expect } = require('chai')
 const { exec } = require('child_process')
+const fs = require('fs')
 const generate = require('path').join(__dirname, '../bin/generate')
 
 describe('Generate tests', () => {
@@ -50,6 +51,31 @@ describe('Generate tests', () => {
         .to.not.be.equal(-1)
 
       done(null)
+    })
+  })
+
+  it.only('Expect to generate file with stub (default) content', (done) => {
+    exec(`${generate} -t sql`, (error, stdout, stderr) => {
+      expect(error).to.equal(null)
+      expect(stdout.length).to.not.equal(0)
+      expect(stderr.length).to.equal(0)
+
+      const filePathPattern = /"\/([a-z0-9/\-.]*)"/gi
+
+      const matches = filePathPattern.exec(stdout)
+
+      const filePath = matches[0].replace(/["]/g, '')
+
+      fs.readFile(filePath, (error, data) => {
+        expect(error).to.equal(null)
+        expect(data.length).to.not.equal(0)
+
+        fs.readFile(`${__dirname}/../src/generate/stub.js`, (err, content) => {
+          expect(err).to.equal(null)
+          expect(data.equals(content)).to.equal(true)
+          done(null)
+        })
+      })
     })
   })
 })
