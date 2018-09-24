@@ -3,7 +3,11 @@ const { join } = require('path')
 
 module.exports.getFiles = (argv) => {
   return new Promise((resolve, reject) => {
-    const path = join(process.cwd(), argv.w) || join(__dirname, '..', '..', 'migrations', argv.t)
+    let path = join(__dirname, '..', '..', 'migrations', argv.t)
+
+    if (argv.w) {
+      path = join(process.cwd(), argv.w)
+    }
 
     fs.readdir(path, (err, files) => {
       if (err) return reject(err)

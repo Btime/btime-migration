@@ -12,10 +12,8 @@ module.exports.migrate = () => {
     return FileManager.getFiles(argv)
       .then(payload => Workspaces.getWorkspaces(payload))
       .then(payload => apply(payload))
-      .then(result => {
-        return resolve(result)
-      })
-      .catch(err => reject(err))
+      .then(resolve)
+      .catch(reject)
   })
 }
 
@@ -39,8 +37,8 @@ function workspaceMigration (uri, files) {
         connection,
         files
       }))
-      .then(result => resolve(result))
-      .catch(err => reject(err))
+      .then(resolve)
+      .catch(reject)
   })
 }
 
@@ -51,7 +49,7 @@ function prepareDatabase (uri) {
     return driver
       .prepare(driver.connection(uri))
       .then(connection => resolve(connection))
-      .catch(err => reject(err))
+      .catch(reject)
   })
 }
 
