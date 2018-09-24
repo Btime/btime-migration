@@ -83,6 +83,10 @@ function markAsDone (payload) {
 
 function markAsDonePersist (payload) {
   return new Promise((resolve, reject) => {
-    return resolve(payload.version)
+    return DriverFactory
+      .makeByType(payload)
+      .then(payload => payload.driver.markAsDone(payload))
+      .then(resolve)
+      .catch(reject)
   })
 }

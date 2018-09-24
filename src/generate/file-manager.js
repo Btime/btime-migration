@@ -3,10 +3,7 @@
 const fs = require('fs')
 const moment = require('moment')
 const path = require('path')
-const PATTERN = {
-  prefix: 'Version',
-  extension: '.js'
-}
+const PATTERN = require('./filename-pattern')
 
 module.exports.create = (argv) => {
   return new Promise((resolve, reject) => {

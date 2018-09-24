@@ -18,7 +18,7 @@ module.exports.parse = (uri) => {
 
   if (!driver) {
     throw new Error(
-      `The connection ${uri} could not be resolved as SQL or NONSQL`
+      `The connection "${uri}" could not be resolved as SQL or NONSQL`
     )
   }
   return driverType(driver.shift())
