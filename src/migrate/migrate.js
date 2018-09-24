@@ -44,10 +44,9 @@ function workspaceMigration (uri, files) {
 
 function prepareDatabase (uri) {
   return new Promise((resolve, reject) => {
-    const driver = DriverFactory.make(uri)
-
-    return driver
-      .prepare(driver.connection(uri))
+    return DriverFactory
+      .make(uri)
+      .then(driver => driver.prepare(driver.connection(uri)))
       .then(connection => resolve(connection))
       .catch(reject)
   })
@@ -59,9 +58,8 @@ function runUp (payload) {
       const migration = require(file)
       return migration.up(payload.connection.instance)
     }))
-      .then(versions => markAsDone(Object.assign(payload, {
-        versions
-      })))
+      .then(versions => markAsDone(Object.assign({}, payload, { versions })
+      ))
       .then(resolve)
       .catch(reject)
   })
@@ -70,9 +68,9 @@ function runUp (payload) {
 function markAsDone (payload) {
   return new Promise((resolve, reject) => {
     return Promise.all(payload.versions
-      .map(version => markAsDonePersist(Object.assign(payload, {
-        version
-      }))))
+      .map(
+        version => markVersionAsDone(Object.assign({}, payload, { version }))
+      ))
       .then(versions => {
         payload.connection.instance.close()
         return resolve(versions)
@@ -81,11 +79,11 @@ function markAsDone (payload) {
   })
 }
 
-function markAsDonePersist (payload) {
+function markVersionAsDone (payload) {
   return new Promise((resolve, reject) => {
     return DriverFactory
       .makeByType(payload)
-      .then(payload => payload.driver.markAsDone(payload))
+      .then(params => params.driver.markAsDone(params))
       .then(resolve)
       .catch(reject)
   })

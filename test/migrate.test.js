@@ -74,7 +74,7 @@ describe('Migrate tests', () => {
   })
 
   it('Expect type parameter to accept only one value (last)', (done) => {
-    exec(`${migrate} -t sql -t nonsql`, (err, stdout, stderr) => {
+    exec(`${migrate} -t nonsql -t sql`, (err, stdout, stderr) => {
       expect(err).to.equal(null)
       expect(stdout.length).to.not.equal(0)
       expect(stderr.length).to.equal(0)
