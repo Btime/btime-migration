@@ -7,6 +7,7 @@ const path = require('path')
 const { expect } = require('chai')
 const { exec } = require('child_process')
 const migrate = path.join(__dirname, '..', 'bin/migrate')
+const Filename = require('./../src/filename')
 
 describe('Migrate tests', () => {
   it('Expect environment file (.env) to exist', (done) => {
@@ -122,6 +123,32 @@ describe('Migrate tests', () => {
       expect(stdout.length).to.not.equal(0)
       expect(stderr.length).to.equal(0)
       done(null)
+    })
+  })
+
+  it('Expect not to run "already-run" migrations', (done) => {
+    const customDir = 'test/mocks/migrate/custom-dir'
+
+    fs.readdir(customDir, (err, files) => {
+      expect(err).to.equal(null)
+
+      const versions = ((files) => {
+        return files.map((file) => {
+          return Filename.getVersion(file)
+        })
+      })(files)
+
+      exec(`${migrate} -t sql -w ${customDir}`, (err, stdout, stderr) => {
+        expect(err).to.equal(null)
+        expect(stdout.length).to.not.equal(0)
+        expect(stderr.length).to.equal(0)
+
+        for (const version in versions) {
+          expect(stdout.includes(version)).to.equal(false)
+        }
+
+        done(null)
+      })
     })
   })
 })
