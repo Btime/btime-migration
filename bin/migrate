@@ -1,7 +1,15 @@
 #!/usr/bin/env node
 
 const { migrate } = require('./../src/migrate/migrate')
+const chalk = require('chalk')
 
 migrate()
-  .then(response => console.log(response))
-  .catch(err => console.log('\x1b[31m%s\x1b[0m', err))
+  .then(resume)
+  .catch(err => console.log(chalk.bold.red(err)))
+
+function resume (result) {
+  if (!result.length) {
+    console.log('Nothing to migrate')
+  }
+  console.log(`\n${chalk.black.bgGreen('DONE')}`)
+}

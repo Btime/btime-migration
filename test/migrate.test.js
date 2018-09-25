@@ -90,7 +90,7 @@ describe('Migrate tests', () => {
       expect(err).to.equal(null)
       expect(stderr.length).to.equal(0)
       expect(stdout.length).not.to.equal(0)
-      expect(stdout).to.equal('Nothing to migrate\n')
+      expect(stdout.indexOf('Nothing to migrate')).to.not.equal(-1)
       done(null)
     })
   })
