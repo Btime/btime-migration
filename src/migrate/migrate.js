@@ -12,7 +12,7 @@ const DriverFactory = require('../drivers/factory')
 module.exports.migrate = () => {
   return new Promise(async (resolve, reject) => {
     return FileManager.getFiles(argv)
-      .then(payload => Workspaces.getWorkspaces(payload))
+      .then(payload => Workspaces.getDatabaseUris(payload))
       .then(payload => apply(payload))
       .then(resolve)
       .catch(reject)

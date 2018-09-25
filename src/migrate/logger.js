@@ -26,7 +26,7 @@ module.exports.resume = (versions) => {
       }
     }
 
-    log(chalk.bold.underline.yellow('Resume:'), resume)
+    log(`${chalk.bold.underline.yellow('Resume:')} ${resume}\n`)
 
     return resolve(versions)
   })
