@@ -21,10 +21,6 @@ module.exports.migrate = () => {
 
 function apply (payload) {
   return new Promise(async (resolve, reject) => {
-    if (payload.files.length === 0) {
-      return resolve([])
-    }
-
     return Promise.all(payload.databaseUris
       .map(uri => workspaceMigration({ uri, files: payload.files })))
       .then(resolve)

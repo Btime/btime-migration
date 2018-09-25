@@ -8,8 +8,5 @@ migrate()
   .catch(err => console.log(chalk.bold.red(err)))
 
 function resume (result) {
-  if (!result.length) {
-    console.log('Nothing to migrate')
-  }
   console.log(`\n${chalk.black.bgGreen('DONE')}`)
 }
