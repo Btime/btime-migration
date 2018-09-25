@@ -1,6 +1,6 @@
 const { Sequelize, Op } = require('sequelize')
 const MIGRATIONS_TABLE = 'migrations'
-const FILENAME_PATTERN = require('./../generate/filename-pattern')
+const Filename = require('./../filename')
 
 module.exports.connection = (uri) => {
   return {
@@ -41,7 +41,7 @@ module.exports.markAsDone = (payload) => {
     INSERT INTO public."${MIGRATIONS_TABLE}" ("version", "createdAt") VALUES
     (?, ?);
     `
-    const version = filename.replace(versionRegEx(), '')
+    const version = Filename.getVersion(filename)
 
     return payload.connection.instance
       .query(query, {
@@ -53,8 +53,21 @@ module.exports.markAsDone = (payload) => {
   })
 }
 
-function versionRegEx () {
-  const pattern = `[(${FILENAME_PATTERN.prefix})|(${FILENAME_PATTERN.extension})]*`
+module.exports.getRan = (payload) => {
+  const query = `SELECT "version" from public."${MIGRATIONS_TABLE}"`
 
-  return new RegExp(pattern, 'gi')
+  return new Promise((resolve, reject) => {
+    return payload.connection.instance
+      .query(query, {
+        type: Sequelize.QueryTypes.SELECT
+      })
+      .then(migrations => {
+        const versions = migrations.map((migration) => {
+          return migration.version
+        })
+
+        return resolve(Object.assign({}, payload, { ran: versions }))
+      })
+      .catch(reject)
+  })
 }

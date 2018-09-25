@@ -4,7 +4,7 @@ module.exports.getWorkspaces = (payload) => {
       const connection = (
         payload.argv.t === 'sql' ? process.env.SQL_URI : process.env.NONSQL_URI
       )
-      resolve(Object.assign({}, payload, { databaseUrls: [ connection ] }))
+      resolve(Object.assign({}, payload, { databaseUris: [ connection ] }))
     }
     throw new Error('Multiple databases migration is not supported yet.')
   })

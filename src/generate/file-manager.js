@@ -1,9 +1,8 @@
 'use strict'
 
 const fs = require('fs')
-const moment = require('moment')
 const path = require('path')
-const PATTERN = require('./filename-pattern')
+const Filename = require('./../filename')
 
 module.exports.create = (argv) => {
   return new Promise((resolve, reject) => {
@@ -27,12 +26,6 @@ function resolveFilePath (argv) {
     '../..',
     'migrations',
     argv.t,
-    generateFilename()
+    Filename.generate()
   )
-}
-
-function generateFilename () {
-  return PATTERN.prefix +
-    moment().format('YYYYMMDDHHmmssSSS') +
-    PATTERN.extension
 }

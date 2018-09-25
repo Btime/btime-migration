@@ -5,6 +5,7 @@ require('dotenv').config()
 const { argv } = require('./argv')
 const Workspaces = require('./workspaces')
 const FileManager = require('./file-manager')
+const Filename = require('./../filename')
 const DriverFactory = require('../drivers/factory')
 
 module.exports.migrate = () => {
@@ -23,8 +24,8 @@ function apply (payload) {
       return resolve('Nothing to migrate')
     }
 
-    return Promise.all(payload.databaseUrls
-      .map(databaseUrl => workspaceMigration(databaseUrl, payload.files)))
+    return Promise.all(payload.databaseUris
+      .map(databaseUri => workspaceMigration(databaseUri, payload.files)))
       .then(resolve)
       .catch(reject)
   })
@@ -33,10 +34,8 @@ function apply (payload) {
 function workspaceMigration (uri, files) {
   return new Promise((resolve, reject) => {
     return prepareDatabase(uri)
-      .then(connection => runUp({
-        connection,
-        files
-      }))
+      .then(connection => filterMigrationsToRunUp({ connection, files }))
+      .then(runUp)
       .then(resolve)
       .catch(reject)
   })
@@ -47,7 +46,23 @@ function prepareDatabase (uri) {
     return DriverFactory
       .make(uri)
       .then(driver => driver.prepare(driver.connection(uri)))
-      .then(connection => resolve(connection))
+      .then(resolve)
+      .catch(reject)
+  })
+}
+
+function filterMigrationsToRunUp (payload) {
+  return new Promise((resolve, reject) => {
+    return DriverFactory
+      .makeByType(payload)
+      .then(payload => payload.driver.getRan(payload))
+      .then(payload => {
+        const files = payload.files.filter((file) => {
+          return (!payload.ran.includes(Filename.getVersion(file)))
+        })
+        return Promise.resolve(Object.assign({}, payload, { files }))
+      })
+      .then(resolve)
       .catch(reject)
   })
 }

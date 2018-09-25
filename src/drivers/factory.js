@@ -27,7 +27,7 @@ function makeByType (payload) {
         }))
       }
 
-      return reject(Error(`Could not resolve driver for type: ${type}`))
+      return reject(new Error(`Could not resolve driver for type: ${type}`))
     } catch (error) {
       return reject(error)
     }
