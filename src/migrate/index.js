@@ -3,14 +3,14 @@
 require('dotenv').config()
 
 const { argv } = require('./argv')
-const Logger = require('./logger')
+const Logger = require('./../logger')
 const Filename = require('./../filename')
 const Workspaces = require('./workspaces')
 const FileManager = require('./file-manager')
 const DriverFactory = require('../drivers/factory')
 
 module.exports.migrate = () => {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     return FileManager.getFiles(argv)
       .then(payload => Workspaces.getDatabaseUris(payload))
       .then(payload => apply(payload))
@@ -20,7 +20,7 @@ module.exports.migrate = () => {
 }
 
 function apply (payload) {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     return Promise.all(payload.databaseUris
       .map(uri => workspaceMigration({ uri, files: payload.files })))
       .then(resolve)
@@ -74,10 +74,10 @@ function runUp (payload) {
   return new Promise((resolve, reject) => {
     return Promise.all(payload.files.map(file => {
       const migration = require(file)
-      Logger.migration(file)
+      Logger.up(file)
       return migration.up(payload.connection.instance)
     }))
-      .then(Logger.resume)
+      .then(Logger.upResume)
       .then(versions => markAsDone(Object.assign({}, payload, { versions })))
       .then(resolve)
       .catch(reject)
