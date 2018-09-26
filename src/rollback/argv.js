@@ -24,6 +24,13 @@ module.exports.argv = (() => {
       nargs: 1,
       type: 'string'
     })
+    .option('multiple', {
+      alias: 'm',
+      describe: 'Bulk-rollback process for each available workspace',
+      nargs: 1,
+      type: 'string',
+      choices: TYPE_OPTIONS
+    })
     .demandOption([ 'version', 'type' ])
     .argv
 })()

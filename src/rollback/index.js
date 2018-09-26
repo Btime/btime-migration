@@ -31,10 +31,12 @@ function apply (payload) {
 
 function rollbackByUri (payload) {
   return new Promise((resolve, reject) => {
-    Logger.workspace(payload.uri)
-
     return checkMigrationsRepository(payload)
       .then(payload => payload.driver.checkVersionTracking(payload))
+      .then(payload => {
+        Logger.workspace(payload.uri)
+        return payload
+      })
       .then(handleVersionRollback)
       .then(handleVersionUntrack)
       .then(closeConnection)
