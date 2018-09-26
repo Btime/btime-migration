@@ -4,8 +4,8 @@ module.exports.up = (connection) => {
   })
 }
 
-module.exports.down = (connection) => {
+module.exports.down = (payload) => {
   return new Promise((resolve, reject) => {
-    resolve(__filename)
+    resolve({ ...payload })
   })
 }
