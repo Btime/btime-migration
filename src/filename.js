@@ -5,6 +5,8 @@ const PATTERN = {
   extension: '.js'
 }
 
+module.exports.PATTERN = PATTERN
+
 module.exports.generate = () => {
   return PATTERN.prefix +
     moment().format('YYYYMMDDHHmmssSSS') +
