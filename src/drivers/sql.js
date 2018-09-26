@@ -1,4 +1,4 @@
-const { Sequelize, Op } = require('sequelize')
+const { Sequelize, Op, QueryTypes } = require('sequelize')
 const MIGRATIONS_TABLE = 'migrations'
 const Filename = require('./../filename')
 
@@ -33,7 +33,9 @@ module.exports.markAsDone = (payload) => {
 
     if (!filename) {
       return reject(
-        new Error(`Couldn't resolve filename. Cannot persist. ${payload.version}`)
+        new Error(
+          `Couldn't resolve filename. Cannot persist. ${payload.version}`
+        )
       )
     }
 
@@ -45,7 +47,7 @@ module.exports.markAsDone = (payload) => {
 
     return payload.connection.instance
       .query(query, {
-        type: Sequelize.QueryTypes.INSERT,
+        type: QueryTypes.INSERT,
         replacements: [ version, 'NOW()' ]
       })
       .then(result => resolve(version))
@@ -58,15 +60,71 @@ module.exports.getRan = (payload) => {
 
   return new Promise((resolve, reject) => {
     return payload.connection.instance
-      .query(query, {
-        type: Sequelize.QueryTypes.SELECT
-      })
+      .query(query, { type: QueryTypes.SELECT })
       .then(migrations => {
-        const versions = migrations.map((migration) => {
+        const ran = migrations.map((migration) => {
           return migration.version
         })
+        return resolve({ ...payload, ran })
+      })
+      .catch(reject)
+  })
+}
 
-        return resolve(Object.assign({}, payload, { ran: versions }))
+module.exports.checkRepository = (payload) => {
+  const query = `SELECT EXISTS (SELECT 1 FROM information_schema.tables
+   WHERE table_schema = 'public' AND table_name = '${MIGRATIONS_TABLE}');
+   `
+
+  return new Promise((resolve, reject) => {
+    return payload.connection.instance
+      .query(query, { type: QueryTypes.SELECT })
+      .then(response => {
+        if (response.pop().exists) {
+          return resolve(payload)
+        }
+        payload.connection.instance.close()
+
+        return reject(new Error(
+          `Could not find migrations repository at connection: ${payload.uri}`
+        ))
+      })
+      .catch(error => {
+        payload.connection.instance.close()
+        return reject(error)
+      })
+  })
+}
+
+module.exports.untrack = (payload) => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      DELETE FROM public."${MIGRATIONS_TABLE}"
+      WHERE "version" = '${payload.argv.v}'
+    `
+    return payload.connection.instance.query(query, {
+      type: QueryTypes.DELETE
+    })
+      .then(response => resolve(payload))
+      .catch(error => {
+        payload.connection.instance.close()
+        return reject(error)
+      })
+  })
+}
+
+module.exports.checkVersionTracking = (payload) => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT * FROM public."${MIGRATIONS_TABLE}"
+      WHERE "version" = '${payload.argv.v}'
+    `
+    return payload.connection.instance
+      .query(query)
+      .then(response => {
+        const result = response.slice(-1).pop()
+
+        return resolve({ ...payload, versionIsTracked: !!(result.rowCount) })
       })
       .catch(reject)
   })

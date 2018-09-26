@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+
+const { rollback } = require('./../src/rollback')
+const chalk = require('chalk')
+
+rollback()
+  .then(result => console.log(`\n${chalk.black.bgGreen('DONE')}`))
+  .catch(err => console.error(chalk.bold.red(err.message)))

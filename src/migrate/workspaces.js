@@ -11,16 +11,12 @@ module.exports.getDatabaseUris = (payload) => {
       const databaseUri = (
         payload.argv.t === 'sql' ? process.env.SQL_URI : process.env.NONSQL_URI
       )
-      return resolve(Object.assign({}, payload, { databaseUris: [ databaseUri ] }))
+      return resolve({ ...payload, databaseUris: [ databaseUri ] })
     }
 
     if (payload.argv.m) {
       return getMultiple()
-        .then(databaseUris => {
-          return resolve(Object.assign({}, payload, {
-            databaseUris: databaseUris
-          }))
-        })
+        .then(databaseUris => resolve({ ...payload, databaseUris: databaseUris }))
         .catch(reject)
     }
   })
