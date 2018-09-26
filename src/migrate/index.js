@@ -31,11 +31,7 @@ function apply (payload) {
 function workspaceMigration (payload) {
   return new Promise((resolve, reject) => {
     return prepareDatabase(payload.uri)
-      .then(connection => {
-        return filterMigrationsToRunUp(Object.assign({}, payload, {
-          connection
-        }))
-      })
+      .then(connection => filterMigrationsToRunUp({ ...payload, connection }))
       .then(runUp)
       .then(resolve)
       .catch(reject)
@@ -61,7 +57,7 @@ function filterMigrationsToRunUp (payload) {
         const files = payload.files.filter((file) => {
           return (!payload.ran.includes(Filename.getVersion(file)))
         })
-        return Promise.resolve(Object.assign({}, payload, { files }))
+        return { ...payload, files }
       })
       .then(resolve)
       .catch(reject)
@@ -78,7 +74,7 @@ function runUp (payload) {
       return migration.up(payload.connection.instance)
     }))
       .then(Logger.upResume)
-      .then(versions => markAsDone(Object.assign({}, payload, { versions })))
+      .then(versions => markAsDone({ ...payload, versions }))
       .then(resolve)
       .catch(reject)
   })
@@ -87,9 +83,7 @@ function runUp (payload) {
 function markAsDone (payload) {
   return new Promise((resolve, reject) => {
     return Promise.all(payload.versions
-      .map(
-        version => markVersionAsDone(Object.assign({}, payload, { version }))
-      ))
+      .map(version => markVersionAsDone({ ...payload, version })))
       .then(versions => {
         payload.connection.instance.close()
         return resolve(versions)

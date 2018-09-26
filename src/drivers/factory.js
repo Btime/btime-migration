@@ -22,9 +22,7 @@ function makeByType (payload) {
       const type = payload.connection.type
 
       if (type === 'sql') {
-        return resolve(Object.assign({}, payload, {
-          driver: require('./sql')
-        }))
+        return resolve({ ...payload, driver: require('./sql') })
       }
 
       return reject(new Error(`Could not resolve driver for type: ${type}`))
