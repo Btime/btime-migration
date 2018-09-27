@@ -68,12 +68,15 @@ function runUp (payload) {
   Logger.workspace(payload.uri)
 
   return new Promise((resolve, reject) => {
-    return Promise.all(payload.files.map(file => {
-      const migration = require(file)
-      Logger.up(file)
-      return migration.up(payload.connection.instance)
+    return Promise.all(payload.files.map(migration => {
+      return require(migration)
+        .up(payload.connection.instance)
+        .then(migration => {
+          Logger.up({ ...payload, migration })
+          return migration
+        })
     }))
-      .then(Logger.upResume)
+      .then(versions => Logger.upResume({ ...payload, versions }))
       .then(versions => markAsDone({ ...payload, versions }))
       .then(resolve)
       .catch(reject)

@@ -6,9 +6,11 @@ module.exports.workspace = (uri) => {
   log(chalk.bold.yellow(`Workspace: ${getWorkspaceFromUri(uri)}`))
 }
 
-module.exports.up = (file) => {
+module.exports.up = (payload) => {
+  const version = Filename.getVersion(payload.migration)
+  const workspace = getWorkspaceFromUri(payload.uri)
   log(
-    `${chalk.underline.green('Running Up:')} ${Filename.getVersion(file)}`
+    `${chalk.underline.green(`Migrated (${workspace}):`)} ${version}`
   )
 }
 
@@ -25,7 +27,10 @@ module.exports.untrackedVersion = (payload) => {
   )
 }
 
-module.exports.upResume = (versions) => {
+module.exports.upResume = (payload) => {
+  const versions = payload.versions
+  const workspace = getWorkspaceFromUri(payload.uri)
+
   return new Promise((resolve, reject) => {
     let resume = 'Nothing to migrate'
 
@@ -41,7 +46,7 @@ module.exports.upResume = (versions) => {
       }
     }
 
-    log(`${chalk.bold.underline.yellow('Resume:')} ${resume}\n`)
+    log(`${chalk.bold.underline.yellow(`Resume (${workspace}):`)} ${resume}\n`)
 
     return resolve(versions)
   })
