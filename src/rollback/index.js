@@ -64,29 +64,23 @@ function checkMigrationsRepository (payload) {
 
 function handleVersionRollback (payload) {
   return new Promise((resolve, reject) => {
-    try {
-      if (!payload.versionIsTracked) {
-        Logger.untrackedVersion(payload)
-        return resolve(payload)
-      }
-      Logger.down(payload)
-      const migration = require(payload.file)
-      return resolve(migration.down(payload))
-    } catch (error) {
-      return reject(error)
+    if (!payload.versionIsTracked) {
+      Logger.untrackedVersion(payload)
+      return resolve(payload)
     }
+
+    Logger.down(payload)
+
+    const migration = require(payload.file)
+    return resolve(migration.down(payload))
   })
 }
 
 function handleVersionUntrack (payload) {
   return new Promise((resolve, reject) => {
-    try {
-      if (!payload.versionIsTracked) {
-        return resolve(payload)
-      }
-      return resolve(payload.driver.untrack(payload))
-    } catch (error) {
-      return reject(error)
+    if (!payload.versionIsTracked) {
+      return resolve(payload)
     }
+    return resolve(payload.driver.untrack(payload))
   })
 }

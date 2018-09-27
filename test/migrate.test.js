@@ -65,11 +65,53 @@ describe('Migrate tests', () => {
   it('Expect failure when using a non-existing custom directory', (done) => {
     exec(`${migrate} -t sql -w ./not-found-dir`, (err, stdout, stderr) => {
       expect(err).to.equal(null)
-      expect(stdout.length).to.not.equal(0)
+      expect(stdout.length).to.equal(0)
 
-      const outputParts = stdout.split(':')
+      const outputParts = stderr.split(':')
 
       expect(outputParts[1].trim()).to.equal('ENOENT')
+      done(null)
+    })
+  })
+
+  it(`Expect failure when migrating multiple workspaces (-m) but cannot connect
+    to get URIs`, (done) => {
+    const originalEnvVariable = process.env.MULTIPLE_URI
+
+    process.env.MULTIPLE_URI = 'invalid-connection-URI'
+
+    exec(`${migrate} -t sql -m sql`, (err, stdout, stderr) => {
+      expect(err).to.equal(null)
+      expect(stdout.length).to.equal(0)
+      expect(stderr.length).to.not.equal(0)
+      process.env.MULTIPLE_URI = originalEnvVariable
+      done(null)
+    })
+  })
+
+  it('Expect failure when connection URI is not supported', (done) => {
+    const originalEnvVariable = process.env.SQL_URI
+
+    process.env.SQL_URI = 'redis://localhost:777'
+
+    exec(`${migrate} -t sql`, (err, stdout, stderr) => {
+      expect(err).to.equal(null)
+      expect(stdout.length).to.equal(0)
+      expect(stderr.length).to.not.equal(0)
+      process.env.SQL_URI = originalEnvVariable
+      done(null)
+    })
+  })
+
+  it(`Expect multiple workspaces to be affected when utilizing
+  the "multiple" flag (-m)`, (done) => {
+    exec(`${migrate} -t sql -m sql`, (err, stdout, stderr) => {
+      expect(err).to.equal(null)
+      expect(stdout.length).to.be.gt(0)
+      expect(stderr.length).to.equal(0)
+
+      const workspacesCount = (stdout.match(/(Workspace)/g) || []).length
+      expect(workspacesCount).to.be.gt(1)
       done(null)
     })
   })
@@ -98,7 +140,7 @@ describe('Migrate tests', () => {
   it('Expect to run migrations from a custom directory', (done) => {
     const customDir = 'test/mocks/migrate/custom-dir'
 
-    exec(`${migrate} -t nonsql -w ${customDir}`, (err, stdout, stderr) => {
+    exec(`${migrate} -t sql -w ${customDir}`, (err, stdout, stderr) => {
       expect(err).to.equal(null)
       expect(stderr.length).to.equal(0)
       expect(stdout.length).not.to.equal(0)

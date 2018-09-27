@@ -5,7 +5,7 @@ const chalk = require('chalk')
 
 migrate()
   .then(resume)
-  .catch(err => console.log(chalk.bold.red(err)))
+  .catch(err => console.error(chalk.bold.red(err)))
 
 function resume (result) {
   console.log(`\n${chalk.black.bgGreen('DONE')}`)
