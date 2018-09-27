@@ -17,7 +17,7 @@ module.exports.getByVersion = (payload) => {
 
       if (!file) {
         return reject(new Error(
-          `The specified version could not be found: ${version} (work dir: ${path})`
+          `The specified version could not be found: ${version} (work dir: ${filePath})`
         ))
       }
       return resolve({ ...payload, file: path.join(filePath, file) })
