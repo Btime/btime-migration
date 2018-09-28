@@ -2,13 +2,13 @@
 
 const UriParser = require('../migrate/uri-parser')
 
-module.exports.make = (uri) => {
+module.exports.make = (payload) => {
   return new Promise((resolve, reject) => {
     try {
-      const type = UriParser.parse(uri)
+      const type = UriParser.parse(payload.uri)
 
-      return makeByType({ connection: { type } })
-        .then(payload => resolve(payload.driver))
+      return makeByType({ ...payload, connection: { type } })
+        .then(resolve)
         .catch(reject)
     } catch (error) {
       return reject(error)
@@ -31,5 +31,3 @@ function makeByType (payload) {
     }
   })
 }
-
-module.exports.makeByType = makeByType

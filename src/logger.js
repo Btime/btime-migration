@@ -7,11 +7,18 @@ module.exports.workspace = (uri) => {
 }
 
 module.exports.up = (payload) => {
-  const version = Filename.getVersion(payload.migration)
-  const workspace = getWorkspaceFromUri(payload.uri)
-  log(
-    `${chalk.underline.green(`Migrated (${workspace}):`)} ${version}`
-  )
+  return new Promise((resolve, reject) => {
+    try {
+      const version = Filename.getVersion(payload.migration)
+      const workspace = getWorkspaceFromUri(payload.uri)
+      log(
+        `${chalk.underline.green(`Migrated (${workspace}):`)} ${version}`
+      )
+      return resolve(payload)
+    } catch (error) {
+      return reject(error)
+    }
+  })
 }
 
 module.exports.down = (payload) => {

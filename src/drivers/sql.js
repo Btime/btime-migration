@@ -2,39 +2,45 @@ const { Sequelize, Op, QueryTypes } = require('sequelize')
 const MIGRATIONS_TABLE = 'migrations'
 const Filename = require('./../filename')
 
-module.exports.connection = (uri) => {
-  return {
-    type: 'sql',
-    instance: new Sequelize(uri, {
-      logging: false,
-      operatorsAliases: Op
-    })
-  }
-}
-
-module.exports.prepare = (connection) => {
+function connection (payload) {
   return new Promise((resolve, reject) => {
+    const connection = {
+      type: 'sql',
+      instance: new Sequelize(payload.uri, {
+        logging: false,
+        operatorsAliases: Op
+      })
+    }
+    return resolve({ ...payload, connection })
+  })
+}
+module.exports.connection = connection
+
+module.exports.prepare = (payload) => {
+  return new Promise(async (resolve, reject) => {
     const query = `
     CREATE TABLE IF NOT EXISTS public."${MIGRATIONS_TABLE}" (
       "version" CHARACTER VARYING (80) NOT NULL,
       "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL
     );`
 
-    connection.instance
+    payload = await connection(payload)
+
+    return payload.connection.instance
       .query(query)
-      .then(() => resolve(connection))
+      .then(() => resolve(payload))
       .catch((err) => reject(err))
   })
 }
 
 module.exports.markAsDone = (payload) => {
   return new Promise((resolve, reject) => {
-    const filename = payload.version.split('/').pop()
+    const filename = payload.migration.split('/').pop()
 
     if (!filename) {
       return reject(
         new Error(
-          `Couldn't resolve filename. Cannot persist. ${payload.version}`
+          `Couldn't resolve filename. Cannot persist. ${payload.migration}`
         )
       )
     }
@@ -50,22 +56,21 @@ module.exports.markAsDone = (payload) => {
         type: QueryTypes.INSERT,
         replacements: [ version, 'NOW()' ]
       })
-      .then(result => resolve(version))
+      .then(result => resolve({ ...payload, version }))
       .catch(error => reject(error))
   })
 }
 
-module.exports.getRan = (payload) => {
-  const query = `SELECT "version" from public."${MIGRATIONS_TABLE}"`
+module.exports.getStartingPointVersion = (payload) => {
+  const query = `SELECT MAX("version") from public."${MIGRATIONS_TABLE}"`
 
   return new Promise((resolve, reject) => {
     return payload.connection.instance
       .query(query, { type: QueryTypes.SELECT })
-      .then(migrations => {
-        const ran = migrations.map((migration) => {
-          return migration.version
-        })
-        return resolve({ ...payload, ran })
+      .then(migration => {
+        const startingPointVersion = (migration.pop().max || 0)
+
+        return resolve({ ...payload, startingPointVersion })
       })
       .catch(reject)
   })

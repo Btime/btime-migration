@@ -94,7 +94,7 @@ describe('Migrate tests', () => {
       expect(stdout.length).to.be.gt(0)
       expect(stderr.length).to.equal(0)
 
-      const workspacesCount = (stdout.match(/(Workspace)/g) || []).length
+      const workspacesCount = (stdout.match(/(Resume)/g) || []).length
       expect(workspacesCount).to.be.gt(1)
       done(null)
     })

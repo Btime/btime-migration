@@ -12,8 +12,8 @@ const DriverFactory = require('../drivers/factory')
 module.exports.migrate = () => {
   return new Promise((resolve, reject) => {
     return FileManager.getFiles(argv)
-      .then(payload => Workspaces.getDatabaseUris(payload))
-      .then(payload => apply(payload))
+      .then(Workspaces.getDatabaseUris)
+      .then(apply)
       .then(resolve)
       .catch(reject)
   })
@@ -30,19 +30,19 @@ function apply (payload) {
 
 function workspaceMigration (payload) {
   return new Promise((resolve, reject) => {
-    return prepareDatabase(payload.uri)
-      .then(connection => filterMigrationsToRunUp({ ...payload, connection }))
+    return prepareDatabase(payload)
+      .then(filterMigrationsToRunUp)
       .then(runUp)
       .then(resolve)
       .catch(reject)
   })
 }
 
-function prepareDatabase (uri) {
+function prepareDatabase (payload) {
   return new Promise((resolve, reject) => {
     return DriverFactory
-      .make(uri)
-      .then(driver => driver.prepare(driver.connection(uri)))
+      .make(payload)
+      .then(payload => payload.driver.prepare(payload))
       .then(resolve)
       .catch(reject)
   })
@@ -50,12 +50,11 @@ function prepareDatabase (uri) {
 
 function filterMigrationsToRunUp (payload) {
   return new Promise((resolve, reject) => {
-    return DriverFactory
-      .makeByType(payload)
-      .then(payload => payload.driver.getRan(payload))
+    return payload.driver
+      .getStartingPointVersion(payload)
       .then(payload => {
         const files = payload.files.filter((file) => {
-          return (!payload.ran.includes(Filename.getVersion(file)))
+          return Filename.getVersion(file) > payload.startingPointVersion
         })
         return { ...payload, files }
       })
@@ -65,41 +64,19 @@ function filterMigrationsToRunUp (payload) {
 }
 
 function runUp (payload) {
-  Logger.workspace(payload.uri)
-
   return new Promise((resolve, reject) => {
     return Promise.all(payload.files.map(migration => {
       return require(migration)
-        .up(payload.connection.instance)
-        .then(migration => {
-          Logger.up({ ...payload, migration })
-          return migration
-        })
+        .up(payload)
+        .then(() => payload.driver.markAsDone({ ...payload, migration }))
+        .then(Logger.up)
+        .then(payload => Filename.getVersion(payload.migration))
     }))
-      .then(versions => Logger.upResume({ ...payload, versions }))
-      .then(versions => markAsDone({ ...payload, versions }))
-      .then(resolve)
-      .catch(reject)
-  })
-}
-
-function markAsDone (payload) {
-  return new Promise((resolve, reject) => {
-    return Promise.all(payload.versions
-      .map(version => markVersionAsDone({ ...payload, version })))
       .then(versions => {
         payload.connection.instance.close()
-        return resolve(versions)
+        return { ...payload, versions }
       })
-      .catch(reject)
-  })
-}
-
-function markVersionAsDone (payload) {
-  return new Promise((resolve, reject) => {
-    return DriverFactory
-      .makeByType(payload)
-      .then(params => params.driver.markAsDone(params))
+      .then(Logger.upResume)
       .then(resolve)
       .catch(reject)
   })

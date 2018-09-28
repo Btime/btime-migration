@@ -53,10 +53,9 @@ function closeConnection (payload) {
 function checkMigrationsRepository (payload) {
   return new Promise((resolve, reject) => {
     return DriverFactory
-      .make(payload.uri)
-      .then(driver => driver.checkRepository({
-        ...payload, connection: driver.connection(payload.uri), driver
-      }))
+      .make(payload)
+      .then(payload => payload.driver.connection(payload))
+      .then(payload => payload.driver.checkRepository(payload))
       .then(resolve)
       .catch(reject)
   })
