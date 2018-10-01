@@ -5,4 +5,4 @@ const chalk = require('chalk')
 
 rollback()
   .then(result => console.log(`\n${chalk.black.bgGreen('DONE')}`))
-  .catch(err => console.error(chalk.bold.red(err.message)))
+  .catch(err => console.error(chalk.bold.red(err.message), err.stack))
