@@ -2,10 +2,6 @@ const log = console.log
 const chalk = require('chalk')
 const Filename = require('./filename')
 
-module.exports.workspace = (uri) => {
-  log(chalk.bold.yellow(`Workspace: ${getWorkspaceFromUri(uri)}`))
-}
-
 module.exports.up = (payload) => {
   return new Promise((resolve, reject) => {
     try {
@@ -37,8 +33,10 @@ module.exports.down = (payload) => {
 }
 
 module.exports.untrackedVersion = (payload) => {
+  const workspace = getWorkspaceFromUri(payload.uri)
   log(
     chalk.black.bgYellow(' Skipped '),
+    chalk.bold.yellow(`(${workspace})`),
     `Version "${payload.version}" is not tracked on repository.`,
   )
 }
