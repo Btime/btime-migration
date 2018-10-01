@@ -89,22 +89,15 @@ describe('Migrate tests', () => {
 
   it(`Expect multiple workspaces to be affected when utilizing
   the "multiple" flag (-m)`, (done) => {
-    exec(`${migrate} -t sql -m sql`, (err, stdout, stderr) => {
+    const customDir = 'test/mocks/migrate/multiple-workspaces'
+
+    exec(`${migrate} -t sql -m sql -w ${customDir}`, (err, stdout, stderr) => {
       expect(err).to.equal(null)
       expect(stdout.length).to.be.gt(0)
       expect(stderr.length).to.equal(0)
 
       const workspacesCount = (stdout.match(/(Resume)/g) || []).length
       expect(workspacesCount).to.be.gt(1)
-      done(null)
-    })
-  })
-
-  it('Expect type parameter to accept only one value (last)', (done) => {
-    exec(`${migrate} -t nonsql -t sql`, (err, stdout, stderr) => {
-      expect(err).to.equal(null)
-      expect(stdout.length).to.not.equal(0)
-      expect(stderr.length).to.equal(0)
       done(null)
     })
   })
@@ -137,17 +130,6 @@ describe('Migrate tests', () => {
       expect(err).to.not.equal(null)
       expect(stdout.length).to.equal(0)
       expect(stderr.length).to.not.equal(0)
-      done(null)
-    })
-  })
-
-  it('Expect to run migration as SQL type and custom directory', (done) => {
-    const customDir = 'test/mocks/migrate/custom-dir'
-
-    exec(`${migrate} -t sql -w ${customDir}`, (err, stdout, stderr) => {
-      expect(err).to.equal(null)
-      expect(stdout.length).to.not.equal(0)
-      expect(stderr.length).to.equal(0)
       done(null)
     })
   })

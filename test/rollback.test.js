@@ -136,14 +136,14 @@ describe('Rollback tests', () => {
 
   it(`Expect to rollback multiple workspaces when utilizing
     the "multiple" option (-m)`, done => {
-    const customDir = 'test/mocks/migrate/custom-dir'
+    const customDir = 'test/mocks/migrate/multiple-workspaces'
 
-    exec(`${rollback} -t sql -v 20180918110551011 -m sql -w ${customDir}`, (err, stdout, stderr) => {
+    exec(`${rollback} -t sql -v 20181001161919126 -m sql -w ${customDir}`, (err, stdout, stderr) => {
       expect(err).to.equal(null)
       expect(stdout.length).to.not.equal(0)
       expect(stderr.length).to.equal(0)
 
-      const affectedWorkspaces = (stdout.match(/(Workspace)/gi) || []).length
+      const affectedWorkspaces = (stdout.match(/(Rolled back)/gi) || []).length
 
       expect(affectedWorkspaces).to.equal(3)
       done(null)
