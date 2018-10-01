@@ -22,15 +22,24 @@ module.exports.up = (payload) => {
 }
 
 module.exports.down = (payload) => {
-  log(
-    `${chalk.underline.yellow('Rolling back:')} ${Filename.getVersion(payload.file)}`
-  )
+  return new Promise((resolve, reject) => {
+    try {
+      const version = Filename.getVersion(payload.file)
+      const workspace = getWorkspaceFromUri(payload.uri)
+      log(
+        `${chalk.underline.yellow(`Rolled back (${workspace}):`)} ${version}`
+      )
+      return resolve(payload)
+    } catch (error) {
+      return reject(error)
+    }
+  })
 }
 
 module.exports.untrackedVersion = (payload) => {
   log(
     chalk.black.bgYellow(' Skipped '),
-    `Version "${payload.argv.v}" is not tracked on repository.`,
+    `Version "${payload.version}" is not tracked on repository.`,
   )
 }
 
