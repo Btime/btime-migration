@@ -3,8 +3,5 @@
 .idea/
 .vscode/
 .nyc_output/
-/migrations*
-!migrations/sql/.gitkeep
-!migrations/nonsql/.gitkeep
 node_modules
 package-lock.json
