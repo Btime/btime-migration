@@ -12,6 +12,12 @@ module.exports.argv = (() => {
       type: 'string',
       choices: TYPE_OPTIONS
     })
+    .option('workdir', {
+      alias: 'w',
+      describe: 'Storage path for the migration file',
+      nargs: 1,
+      type: 'string'
+    })
     .demandOption([ 'type' ])
     .argv
 })()

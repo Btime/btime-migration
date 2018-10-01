@@ -20,12 +20,12 @@ module.exports.create = (argv) => {
   })
 }
 
-function resolveFilePath (argv) {
-  return path.join(
-    __dirname,
-    '../..',
-    'migrations',
-    argv.t,
-    Filename.generate()
-  )
+function resolveFilePath (payload) {
+  let filePath = path.join(__dirname, '..', '..', 'migrations', payload.type)
+
+  if (payload.workdir) {
+    filePath = path.join(process.cwd(), payload.workdir)
+  }
+
+  return path.join(filePath, Filename.generate())
 }
