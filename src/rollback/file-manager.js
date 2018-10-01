@@ -9,7 +9,7 @@ module.exports.getByVersion = (payload) => {
     fs.readdir(filePath, (error, files) => {
       if (error) return reject(error)
 
-      const version = payload.argv.v
+      const version = payload.version
 
       const regex = new RegExp(`(${PATTERN.prefix})(${version})(${PATTERN.extension})`, 'gi')
 
@@ -26,8 +26,8 @@ module.exports.getByVersion = (payload) => {
 }
 
 function getFilePath (payload) {
-  if (payload.argv.w) {
-    return path.join(process.cwd(), payload.argv.w)
+  if (payload.workdir) {
+    return path.join(process.cwd(), payload.workdir)
   }
-  return path.join(__dirname, '..', '..', 'migrations', payload.argv.t)
+  return path.join(__dirname, '..', '..', 'migrations', payload.type)
 }

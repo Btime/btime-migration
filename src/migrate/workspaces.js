@@ -7,14 +7,18 @@ const MULTIPLE = {
 
 module.exports.getDatabaseUris = (payload) => {
   return new Promise((resolve, reject) => {
-    if (!payload.argv.m) {
+    if (payload.databaseUris) {
+      return resolve({ ...payload })
+    }
+
+    if (!payload.multiple) {
       const databaseUri = (
-        payload.argv.t === 'sql' ? process.env.SQL_URI : process.env.NONSQL_URI
+        payload.type === 'sql' ? process.env.SQL_URI : process.env.NONSQL_URI
       )
       return resolve({ ...payload, databaseUris: [ databaseUri ] })
     }
 
-    if (payload.argv.m) {
+    if (payload.multiple) {
       return getMultiple()
         .then(databaseUris => resolve({ ...payload, databaseUris: databaseUris }))
         .catch(reject)

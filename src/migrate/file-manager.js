@@ -1,12 +1,12 @@
 const fs = require('fs')
 const { join } = require('path')
 
-module.exports.getFiles = (argv) => {
+module.exports.getFiles = (payload) => {
   return new Promise((resolve, reject) => {
-    let path = join(__dirname, '..', '..', 'migrations', argv.t)
+    let path = join(__dirname, '..', '..', 'migrations', payload.type)
 
-    if (argv.w) {
-      path = join(process.cwd(), argv.w)
+    if (payload.workdir) {
+      path = join(process.cwd(), payload.workdir)
     }
 
     fs.readdir(path, (err, files) => {
@@ -16,7 +16,7 @@ module.exports.getFiles = (argv) => {
 
       files = files.map(file => join(path, file))
 
-      return resolve({ argv, files })
+      return resolve({ ...payload, files })
     })
   })
 }

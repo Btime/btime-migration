@@ -6,6 +6,7 @@ const { argv } = require('./argv')
 const Logger = require('./../logger')
 const Filename = require('./../filename')
 const Workspaces = require('./workspaces')
+const { rollback } = require('../rollback')
 const FileManager = require('./file-manager')
 const DriverFactory = require('../drivers/factory')
 
@@ -22,13 +23,13 @@ module.exports.migrate = () => {
 function apply (payload) {
   return new Promise((resolve, reject) => {
     return Promise.all(payload.databaseUris
-      .map(uri => workspaceMigration({ uri, files: payload.files })))
+      .map(uri => migrateWorkspace({ ...payload, uri })))
       .then(resolve)
       .catch(reject)
   })
 }
 
-function workspaceMigration (payload) {
+function migrateWorkspace (payload) {
   return new Promise((resolve, reject) => {
     return prepareDatabase(payload)
       .then(filterMigrationsToRunUp)
@@ -64,20 +65,56 @@ function filterMigrationsToRunUp (payload) {
 }
 
 function runUp (payload) {
-  return new Promise((resolve, reject) => {
-    return Promise.all(payload.files.map(migration => {
-      return require(migration)
-        .up(payload)
-        .then(() => payload.driver.markAsDone({ ...payload, migration }))
-        .then(Logger.up)
-        .then(payload => Filename.getVersion(payload.migration))
-    }))
-      .then(versions => {
-        payload.connection.instance.close()
-        return { ...payload, versions }
+  return new Promise(async (resolve, reject) => {
+    try {
+      const migrationsPromises = payload.files.map(async migration => {
+        const migrationPromise = await require(migration)
+          .up(payload)
+          .then(() => payload.driver.markAsDone({ ...payload, migration }))
+          .then(Logger.up)
+          .then(payload => payload.version)
+        return migrationPromise
       })
-      .then(Logger.upResume)
-      .then(resolve)
-      .catch(reject)
+
+      const versions = await Promise.all(migrationsPromises)
+
+      payload.connection.instance.close()
+
+      return resolve(await Logger.upResume({ ...payload, versions }))
+    } catch (error) {
+      return payload.driver
+        .getVersionsToRollback(payload)
+        .then(rollbackVersions)
+        .then(() => payload.connection.instance.close())
+        .then(() => reject(error))
+        .catch(err => {
+          payload.connection.instance.close()
+          return reject(err)
+        })
+    }
+  })
+}
+
+function rollbackVersions (payload) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const versionsToRollback = payload.versionsToRollback.map(async version => {
+        const rolledback = await rollback({
+          type: payload.type,
+          version,
+          connection: payload.connection,
+          driver: payload.driver,
+          databaseUris: [ payload.uri ],
+          options: {
+            closeConnection: false
+          }
+        })
+        return rolledback
+      })
+
+      return resolve(await Promise.all(versionsToRollback))
+    } catch (error) {
+      return reject(error)
+    }
   })
 }

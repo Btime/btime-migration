@@ -7,15 +7,26 @@ const Logger = require('../logger')
 const FileManager = require('./file-manager')
 const DriverFactory = require('../drivers/factory')
 const Workspace = require('./../migrate/workspaces')
+const { OPTIONS } = require('./options')
 
-module.exports.rollback = () => {
+module.exports.rollback = (payload) => {
   return new Promise((resolve, reject) => {
-    return Workspace
-      .getDatabaseUris({ argv })
+    return mergePayloadOptions(payload || argv())
+      .then(Workspace.getDatabaseUris)
       .then(FileManager.getByVersion)
       .then(apply)
       .then(resolve)
       .catch(reject)
+  })
+}
+
+function mergePayloadOptions (payload) {
+  return Promise.resolve({
+    ...payload,
+    options: {
+      ...OPTIONS,
+      ...payload.options
+    }
   })
 }
 
@@ -33,12 +44,7 @@ function rollbackByUri (payload) {
   return new Promise((resolve, reject) => {
     return checkMigrationsRepository(payload)
       .then(payload => payload.driver.checkVersionTracking(payload))
-      .then(payload => {
-        Logger.workspace(payload.uri)
-        return payload
-      })
       .then(handleVersionRollback)
-      .then(handleVersionUntrack)
       .then(closeConnection)
       .then(resolve)
       .catch(reject)
@@ -46,12 +52,21 @@ function rollbackByUri (payload) {
 }
 
 function closeConnection (payload) {
-  payload.connection.instance.close()
-  return { ...payload }
+  if (payload.options.closeConnection) {
+    payload.connection.instance.close()
+  }
+  return payload
 }
 
 function checkMigrationsRepository (payload) {
   return new Promise((resolve, reject) => {
+    if (payload.driver && payload.connection) {
+      return payload.driver
+        .checkRepository(payload)
+        .then(resolve)
+        .catch(reject)
+    }
+
     return DriverFactory
       .make(payload)
       .then(payload => payload.driver.connection(payload))
@@ -63,23 +78,22 @@ function checkMigrationsRepository (payload) {
 
 function handleVersionRollback (payload) {
   return new Promise((resolve, reject) => {
-    if (!payload.versionIsTracked) {
-      Logger.untrackedVersion(payload)
-      return resolve(payload)
+    try {
+      if (!payload.versionIsTracked) {
+        Logger.untrackedVersion(payload)
+        return resolve(payload)
+      }
+
+      const migration = require(payload.file)
+
+      return migration
+        .down(payload)
+        .then(() => payload.driver.untrack(payload))
+        .then(() => Logger.down(payload))
+        .then(() => resolve(payload))
+        .catch(reject)
+    } catch (error) {
+      return reject(error)
     }
-
-    Logger.down(payload)
-
-    const migration = require(payload.file)
-    return resolve(migration.down(payload))
-  })
-}
-
-function handleVersionUntrack (payload) {
-  return new Promise((resolve, reject) => {
-    if (!payload.versionIsTracked) {
-      return resolve(payload)
-    }
-    return resolve(payload.driver.untrack(payload))
   })
 }

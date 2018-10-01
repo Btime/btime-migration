@@ -1,7 +1,7 @@
 const yargs = require('yargs')
 const TYPE_OPTIONS = [ 'sql', 'nonsql' ]
 
-module.exports.argv = (() => {
+module.exports.argv = () => {
   return yargs
     .usage('Usage: $0 -v [version]')
     .version(false)
@@ -33,4 +33,4 @@ module.exports.argv = (() => {
     })
     .demandOption([ 'version', 'type' ])
     .argv
-})()
+}
