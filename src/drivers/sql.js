@@ -105,7 +105,7 @@ module.exports.untrack = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
       DELETE FROM public."${MIGRATIONS_TABLE}"
-      WHERE "version" = '${payload.argv.v}'
+      WHERE "version" = '${payload.version}'
     `
     return payload.connection.instance.query(query, {
       type: QueryTypes.DELETE
@@ -122,7 +122,7 @@ module.exports.checkVersionTracking = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
       SELECT * FROM public."${MIGRATIONS_TABLE}"
-      WHERE "version" = '${payload.argv.v}'
+      WHERE "version" = '${payload.version}'
     `
     return payload.connection.instance
       .query(query)
@@ -130,6 +130,25 @@ module.exports.checkVersionTracking = (payload) => {
         const result = response.slice(-1).pop()
 
         return resolve({ ...payload, versionIsTracked: !!(result.rowCount) })
+      })
+      .catch(reject)
+  })
+}
+
+module.exports.getVersionsToRollback = (payload) => {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT "version" FROM public."migrations"
+    WHERE "version" > '${payload.startingPointVersion}'
+    ORDER BY "version" DESC`
+
+    return payload.connection.instance
+      .query(query)
+      .then(response => {
+        const result = response.slice(-1).pop()
+
+        const versions = result.rows.map((entry) => entry.version)
+
+        return resolve({ ...payload, versionsToRollback: versions })
       })
       .catch(reject)
   })
