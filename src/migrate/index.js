@@ -107,7 +107,8 @@ function rollbackVersions (payload) {
           databaseUris: [ payload.uri ],
           options: {
             closeConnection: false
-          }
+          },
+          workdir: payload.workdir
         })
         return rolledback
       })
