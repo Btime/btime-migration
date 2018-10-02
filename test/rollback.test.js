@@ -1,5 +1,7 @@
 /* eslint-env mocha */
 
+require('dotenv').config()
+
 const path = require('path')
 const { expect } = require('chai')
 const { exec } = require('child_process')
@@ -16,7 +18,7 @@ describe('Rollback tests', () => {
   })
 
   it('Expect failure when a non-existing version is specified', done => {
-    exec(`${rollback} -t sql -v 1234777`, (err, stdout, stderr) => {
+    exec(`${rollback} -v 1234777`, (err, stdout, stderr) => {
       expect(err).to.equal(null)
       expect(stdout.length).to.equal(0)
       expect(stderr.length).to.not.equal(0)
@@ -25,7 +27,7 @@ describe('Rollback tests', () => {
   })
 
   it('Expect failure when a non-existing work directory (-w) is specified', done => {
-    exec(`${rollback} -t sql -w ./non-existing-dir -v 1234777`, (err, stdout, stderr) => {
+    exec(`${rollback} -w ./non-existing-dir -v 1234777`, (err, stdout, stderr) => {
       expect(err).to.equal(null)
       expect(stdout.length).to.equal(0)
       expect(stderr.length).to.not.equal(0)
@@ -39,7 +41,7 @@ describe('Rollback tests', () => {
 
     process.env.SQL_URI = 'postgres://postgres:postgres@localhost:5432/postgres'
 
-    exec(`${rollback} -t sql -v 20180918110551011 -w ${customDir}`, (err, stdout, stderr) => {
+    exec(`${rollback} -v 20180918110551011 -w ${customDir}`, (err, stdout, stderr) => {
       expect(err).to.equal(null)
       expect(stdout.length).to.equal(0)
       expect(stderr.length).to.not.equal(0)
@@ -57,31 +59,13 @@ describe('Rollback tests', () => {
     })
   })
 
-  it('Expect failure when the "multiple" option is invalid', done => {
-    exec(`${rollback} -t sql -m not-supported -v 1234`, (err, stdout, stderr) => {
-      expect(err).to.not.equal(null)
-      expect(stdout.length).to.equal(0)
-      expect(stderr.length).to.not.equal(0)
-      done(null)
-    })
-  })
-
-  it('Expect failure when using the "multiple" flag as boolean option', done => {
-    exec(`${rollback} -t sql -m`, (err, stdout, stderr) => {
-      expect(err).to.not.equal(null)
-      expect(stdout.length).to.equal(0)
-      expect(stderr.length).to.not.equal(0)
-      done(null)
-    })
-  })
-
   it(`Expect failure when rolling back multiple workspaces(-m) but
   cannot connect to get URIs`, done => {
     const customDir = 'test/mocks/rollback'
     const originalEnvVariable = process.env.MULTIPLE_URI
 
     process.env.MULTIPLE_URI = 'invalid-connection-URI'
-    exec(`${rollback} -t sql -m sql -w ${customDir} -v 20180927123529146`,
+    exec(`${rollback} -m -w ${customDir} -v 20180927123529146`,
       (err, stdout, stderr) => {
         expect(err).to.equal(null)
         expect(stdout.length).to.equal(0)
@@ -97,7 +81,7 @@ describe('Rollback tests', () => {
 
     process.env.SQL_URI = 'redis://localhost:777'
 
-    exec(`${rollback} -t sql -w ${customDir} -v 20180927123529146`,
+    exec(`${rollback} -w ${customDir} -v 20180927123529146`,
       (err, stdout, stderr) => {
         expect(err).to.equal(null)
         expect(stdout.length).to.equal(0)
@@ -110,11 +94,10 @@ describe('Rollback tests', () => {
   it('Expect ran migration (from custom work dir) to rollback', done => {
     const customDir = 'test/mocks/migrate/custom-dir'
 
-    exec(`${rollback} -t sql -v 20180918110551011 -w ${customDir}`, (err, stdout, stderr) => {
+    exec(`${rollback} -v 20180918110551011 -w ${customDir}`, (err, stdout, stderr) => {
       expect(err).to.equal(null)
       expect(stdout.length).to.not.equal(0)
       expect(stderr.length).to.equal(0)
-
       done(null)
     })
   })
@@ -122,7 +105,7 @@ describe('Rollback tests', () => {
   it('Expect to skip rollback if version is not tracked at repository', done => {
     const customDir = 'test/mocks/migrate/custom-dir'
 
-    exec(`${rollback} -t sql -v 20180918110551011 -w ${customDir}`,
+    exec(`${rollback} -v 20180918110551011 -w ${customDir}`,
       (err, stdout, stderr) => {
         expect(err).to.equal(null)
         expect(stdout.length).to.not.equal(0)
@@ -138,7 +121,7 @@ describe('Rollback tests', () => {
     the "multiple" option (-m)`, done => {
     const customDir = 'test/mocks/migrate/multiple-workspaces'
 
-    exec(`${rollback} -t sql -v 20181001161919126 -m sql -w ${customDir}`, (err, stdout, stderr) => {
+    exec(`${rollback} -v 20181001161919126 -m -w ${customDir}`, (err, stdout, stderr) => {
       expect(err).to.equal(null)
       expect(stdout.length).to.not.equal(0)
       expect(stderr.length).to.equal(0)

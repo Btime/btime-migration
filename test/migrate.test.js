@@ -10,15 +10,6 @@ const migrate = path.join(__dirname, '..', 'bin/migrate')
 const Filename = require('./../src/filename')
 
 describe('Migrate tests', () => {
-  it('Expect failure without required arguments', (done) => {
-    exec(`${migrate}`, (err, stdout, stderr) => {
-      expect(err).to.not.equal(null)
-      expect(stdout.length).to.equal(0)
-      expect(stderr.length).to.not.equal(0)
-      done(null)
-    })
-  })
-
   it('Expect failure when database type is invalid', (done) => {
     exec(`${migrate} -t invalid`, (err, stdout, stderr) => {
       expect(err).to.not.equal(null)
@@ -28,26 +19,8 @@ describe('Migrate tests', () => {
     })
   })
 
-  it('Expect failure when the "multiple" option is invalid', (done) => {
-    exec(`${migrate} -t sql -m not-supported`, (err, stdout, stderr) => {
-      expect(err).to.not.equal(null)
-      expect(stdout.length).to.equal(0)
-      expect(stderr.length).to.not.equal(0)
-      done(null)
-    })
-  })
-
-  it('Expect failure when using the "multiple" flag as boolean option', (done) => {
-    exec(`${migrate} -t sql -m`, (err, stdout, stderr) => {
-      expect(err).to.not.equal(null)
-      expect(stdout.length).to.equal(0)
-      expect(stderr.length).to.not.equal(0)
-      done(null)
-    })
-  })
-
   it('Expect failure when using a non-existing custom directory', (done) => {
-    exec(`${migrate} -t sql -w ./not-found-dir`, (err, stdout, stderr) => {
+    exec(`${migrate} -w ./not-found-dir`, (err, stdout, stderr) => {
       expect(err).to.equal(null)
       expect(stdout.length).to.equal(0)
 
@@ -64,7 +37,7 @@ describe('Migrate tests', () => {
 
     process.env.MULTIPLE_URI = 'invalid-connection-URI'
 
-    exec(`${migrate} -t sql -m sql`, (err, stdout, stderr) => {
+    exec(`${migrate} -m`, (err, stdout, stderr) => {
       expect(err).to.equal(null)
       expect(stdout.length).to.equal(0)
       expect(stderr.length).to.not.equal(0)
@@ -78,7 +51,7 @@ describe('Migrate tests', () => {
 
     process.env.SQL_URI = 'redis://localhost:777'
 
-    exec(`${migrate} -t sql`, (err, stdout, stderr) => {
+    exec(`${migrate}`, (err, stdout, stderr) => {
       expect(err).to.equal(null)
       expect(stdout.length).to.equal(0)
       expect(stderr.length).to.not.equal(0)
@@ -87,11 +60,21 @@ describe('Migrate tests', () => {
     })
   })
 
+  it(`Expect failure when trying to migrate with type NonSQL (not supported yet)`,
+    done => {
+      exec(`${migrate} -t nonsql`, (err, stdout, stderr) => {
+        expect(err).to.equal(null)
+        expect(stdout.length).to.equal(0)
+        expect(stderr.length).to.not.equal(0)
+        done(null)
+      })
+    })
+
   it(`Expect multiple workspaces to be affected when utilizing
   the "multiple" flag (-m)`, (done) => {
     const customDir = 'test/mocks/migrate/multiple-workspaces'
 
-    exec(`${migrate} -t sql -m sql -w ${customDir}`, (err, stdout, stderr) => {
+    exec(`${migrate} -m -w ${customDir}`, (err, stdout, stderr) => {
       expect(err).to.equal(null)
       expect(stdout.length).to.be.gt(0)
       expect(stderr.length).to.equal(0)
@@ -105,7 +88,7 @@ describe('Migrate tests', () => {
   it('Expect output "Nothing to migrate" when there are no migrations', (done) => {
     let emptyMigrationsDir = 'test/mocks/migrate/empty-dir/'
 
-    exec(`${migrate} -t sql -w ${emptyMigrationsDir}`, (err, stdout, stderr) => {
+    exec(`${migrate} -w ${emptyMigrationsDir}`, (err, stdout, stderr) => {
       expect(err).to.equal(null)
       expect(stderr.length).to.equal(0)
       expect(stdout.length).not.to.equal(0)
@@ -117,19 +100,10 @@ describe('Migrate tests', () => {
   it('Expect to run migrations from a custom directory', (done) => {
     const customDir = 'test/mocks/migrate/custom-dir'
 
-    exec(`${migrate} -t sql -w ${customDir}`, (err, stdout, stderr) => {
+    exec(`${migrate} -w ${customDir}`, (err, stdout, stderr) => {
       expect(err).to.equal(null)
       expect(stderr.length).to.equal(0)
       expect(stdout.length).not.to.equal(0)
-      done(null)
-    })
-  })
-
-  it('Expect type to match when utilizing the "multiple" option', (done) => {
-    exec(`${migrate} -t sql -m nonsql`, (err, stdout, stderr) => {
-      expect(err).to.not.equal(null)
-      expect(stdout.length).to.equal(0)
-      expect(stderr.length).to.not.equal(0)
       done(null)
     })
   })
@@ -146,7 +120,7 @@ describe('Migrate tests', () => {
         })
       })(files)
 
-      exec(`${migrate} -t sql -w ${customDir}`, (err, stdout, stderr) => {
+      exec(`${migrate} -w ${customDir}`, (err, stdout, stderr) => {
         expect(err).to.equal(null)
         expect(stdout.length).to.not.equal(0)
         expect(stderr.length).to.equal(0)
@@ -157,6 +131,23 @@ describe('Migrate tests', () => {
 
         done(null)
       })
+    })
+  })
+
+  it('Expect to "safe-migrate" (rollback) when something goes wrong', done => {
+    exec(`${migrate} -w test/mocks/migrate/safe-rollback`, (err, stdout, stderr) => {
+      expect(err).to.equal(null)
+      expect(stdout.length).to.not.equal(0)
+      expect(stderr.length).to.not.equal(0)
+
+      const migratedOutputRegExp = new RegExp(/(migrated)/, 'gi')
+      const rolledbackOutputRegExp = new RegExp(/(rolled back)/, 'gi')
+
+      const migratedMatch = stdout.match(migratedOutputRegExp)
+      const rolledbackMatch = stdout.match(rolledbackOutputRegExp)
+
+      expect(migratedMatch.length).to.equal(rolledbackMatch.length)
+      done(null)
     })
   })
 })
