@@ -1,11 +1,21 @@
-module.exports.up = (connection) => {
+module.exports.up = (payload) => {
   return new Promise((resolve, reject) => {
-    return resolve(__filename)
+    const query = ``
+
+    return payload.connection.instance
+      .query(query)
+      .then(() => resolve(payload))
+      .catch(reject)
   })
 }
 
 module.exports.down = (payload) => {
   return new Promise((resolve, reject) => {
-    return resolve({ ...payload })
+    const query = ``
+
+    return payload.connection.instance
+      .query(query)
+      .then(() => resolve(payload))
+      .catch(reject)
   })
 }
