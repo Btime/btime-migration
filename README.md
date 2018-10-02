@@ -1,19 +1,73 @@
 # BTime V2 Migration
 
-## Usage
+## :books: Table of Contents
 
-### Copy enviroment file and change local configuration
+1. [Setup](#setup)
+1. [Usage](#usage)
+1. [Testing](#testing)
+1. [Linting](#linting)
 
-	cp .env.dist .env
+## **Setup**
+### Copy enviroment file and configure the variables
+	$ cp .env.dist .env
 
-### Example of how to generate a migration:
+### Install dependencies
+	$ npm i
 
-	./generate table_name
+## **Usage**
+### **Generating a migration**
 
-### Example of how to run a specific migration:
+	$ ./bin/generate -t sql
 
-	./import ./migrations/migration_contributor_121901242018
+By default, migration files are created at **`./migrations`** (project root). You can specify a custom directory by utilizing the **`--workdir`** flag:
 
-### How to run all migrations:
+	$ ./bin/generate -t sql --workdir ./custom-mirations-dir
+> The *generate*, *migrate* and *rollback* commands support a custom directory to be specified.
 
-	./import ./migrations all
+:information_source: **Important**	The directory must exist in order to be used.
+
+### **Running migrations**
+
+	$ ./bin/migrate
+
+The above command **will run (_up_)** all migration files, considering default options (flags).
+
+> **Example output:** _Generated new migration file: /home/user/projects/btime-migration/migrations/Version**20181002114415382**.js_
+
+All run migrations get **versioned**, based on it's name - which reflects a unique timestamp. That's the version used when [**rolling back the migration**](#rolling-back-migrations).
+
+### Hitting multiple databases
+The migration process might target multiple databases through the *`"--multiple"`* flag.
+
+	$ ./bin/migrate --multiple
+
+:information_source: **Important** Environment variables prefixed with _"MULTIPLE\__" are used in order to find target databases.
+
+### **Rolling back migrations**
+
+	$ ./bin/rollback --version [version]
+
+The above command **will run (down)** the specified migration, considering default options (flags).
+
+Just like the _migrate_ command, you can make use of the **`--multiple`** flag and target multiple databases:
+
+	$ ./bin/rollback --version [version] --multiple
+
+_All commands come with a **`--help`** flag, which displays useful information about it's usage options._
+
+## Testing
+
+Tests are run using [Mocha](https://mochajs.org) and [Chai](https://www.chaijs.com).
+
+Run test suite
+
+	$ npm run test
+
+Run coverage report
+
+	$ npm run coverage
+
+## Linting
+To scan the code base and "auto-fix" all that violates the defined lint rules, run:
+
+	$ npm run fixStyle
