@@ -2,34 +2,26 @@ const log = console.log
 const chalk = require('chalk')
 const Filename = require('./filename')
 
+module.exports.workspace = (payload) => {
+  log(chalk.bold.yellow(`Workspace: ${getWorkspaceFromUri(payload.uri)}`))
+
+  return Promise.resolve(payload)
+}
+
 module.exports.up = (payload) => {
-  return new Promise((resolve, reject) => {
-    try {
-      const version = Filename.getVersion(payload.migration)
-      const workspace = getWorkspaceFromUri(payload.uri)
-      log(
-        `${chalk.underline.green(`Migrated (${workspace}):`)} ${version}`
-      )
-      return resolve(payload)
-    } catch (error) {
-      return reject(error)
-    }
-  })
+  const version = Filename.getVersion(payload.migration)
+
+  log(`${chalk.underline.green(`Migrated:`)} ${version}`)
+
+  return Promise.resolve(payload)
 }
 
 module.exports.down = (payload) => {
-  return new Promise((resolve, reject) => {
-    try {
-      const version = Filename.getVersion(payload.file)
-      const workspace = getWorkspaceFromUri(payload.uri)
-      log(
-        `${chalk.underline.yellow(`Rolled back (${workspace}):`)} ${version}`
-      )
-      return resolve(payload)
-    } catch (error) {
-      return reject(error)
-    }
-  })
+  const version = Filename.getVersion(payload.file)
+
+  log(`${chalk.underline.yellow(`Rolled back:`)} ${version}`)
+
+  return Promise.resolve(payload)
 }
 
 module.exports.untrackedVersion = (payload) => {
@@ -45,25 +37,23 @@ module.exports.upResume = (payload) => {
   const versions = payload.versions
   const workspace = getWorkspaceFromUri(payload.uri)
 
-  return new Promise((resolve, reject) => {
-    let resume = 'Nothing to migrate'
+  let resume = 'Nothing to migrate'
 
-    if (versions && versions.length) {
-      const first = Filename.getVersion(versions.slice(0, 1)[0])
+  if (versions && versions.length) {
+    const first = Filename.getVersion(versions.slice(0, 1)[0])
 
-      if (versions.length === 1) {
-        resume = `Only "${first}"`
-      }
-
-      if (versions.length > 1) {
-        resume = `From: "${first}", To: "${Filename.getVersion(versions.slice(-1)[0])}"`
-      }
+    if (versions.length === 1) {
+      resume = `Only "${first}"`
     }
 
-    log(`${chalk.bold.underline.yellow(`Resume (${workspace}):`)} ${resume}\n`)
+    if (versions.length > 1) {
+      resume = `From: "${first}", To: "${Filename.getVersion(versions.slice(-1)[0])}"`
+    }
+  }
 
-    return resolve(versions)
-  })
+  log(`${chalk.bold.underline.yellow(`Resume (${workspace}):`)} ${resume}\n`)
+
+  return Promise.resolve(versions)
 }
 
 function getWorkspaceFromUri (uri) {
