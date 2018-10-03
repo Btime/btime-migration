@@ -56,6 +56,12 @@ module.exports.upResume = (payload) => {
   return Promise.resolve(versions)
 }
 
+module.exports.migrationFailed = () => {
+  const flag = chalk.bgRed(chalk.bold.yellow('MIGRATION FAILED'))
+
+  log(`\n${flag} ${chalk.bold.yellow('Rolling back changes...')}\n`)
+}
+
 function getWorkspaceFromUri (uri) {
   return uri.split('/').pop()
 }

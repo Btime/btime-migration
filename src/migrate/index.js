@@ -60,10 +60,13 @@ function apply (payload) {
       }
       return resolve(payload)
     } catch (error) {
+      Logger.migrationFailed()
+
       for (const workspace of payload.workspaces) {
         await workspace.driver
           .getVersionsToRollback({ ...payload, ...workspace })
           .then(rollbackVersions)
+          .then(() => console.log())
       }
       return reject(error)
     } finally {
