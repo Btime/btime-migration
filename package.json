@@ -9,9 +9,9 @@
     "src"
   ],
   "scripts": {
-    "test": "mocha --exit",
+    "test": "mocha --timeout 3600000 --exit",
     "fixStyle": "./node_modules/eslint/bin/eslint.js ./ --fix",
-    "coverage": "nyc mocha --timeout 555555 --exit"
+    "coverage": "nyc mocha --timeout 3600000 --exit"
   },
   "husky": {
     "hooks": {
