@@ -19,6 +19,10 @@
 
 	$ ./bin/generate -t sql
 
+> **Example output:** _Generated new migration file: /home/user/projects/btime-migration/migrations/Version**20181002114415382**.js_
+
+All run migrations get **versioned**, based on it's name - which reflects a unique timestamp. That's the version used when [**rolling back the migration**](#rolling-back-migrations).
+
 By default, migration files are created at **`./migrations`** (project root). You can specify a custom directory by utilizing the **`--workdir`** flag:
 
 	$ ./bin/generate -t sql --workdir ./custom-mirations-dir
@@ -31,10 +35,6 @@ By default, migration files are created at **`./migrations`** (project root). Yo
 	$ ./bin/migrate
 
 The above command **will run (_up_)** all migration files, considering default options (flags).
-
-> **Example output:** _Generated new migration file: /home/user/projects/btime-migration/migrations/Version**20181002114415382**.js_
-
-All run migrations get **versioned**, based on it's name - which reflects a unique timestamp. That's the version used when [**rolling back the migration**](#rolling-back-migrations).
 
 ### Hitting multiple databases
 The migration process might target multiple databases through the *`"--multiple"`* flag.
