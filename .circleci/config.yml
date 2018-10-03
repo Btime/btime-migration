@@ -6,5 +6,5 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: npm lint
+      - run: ./node_modules/eslint/bin/eslint.js ./
       - run: npm test
