@@ -1,0 +1,65 @@
+{
+  "name": "btime-migration",
+  "version": "1.0.0",
+  "description": "## Usage",
+  "engines": {
+    "node": ">=8.9.0"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "mocha --timeout 3600000 --exit",
+    "fixStyle": "./node_modules/eslint/bin/eslint.js ./ --fix",
+    "coverage": "nyc mocha --timeout 3600000 --exit"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "./node_modules/eslint/bin/eslint.js ./",
+      "pre-push": "npm test"
+    }
+  },
+  "nyc": {
+    "exclude": [
+      "migrations",
+      "test"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Btime/btime-migration.git"
+  },
+  "author": "Btime Team (team@btime.io)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Btime/btime-migration/issues"
+  },
+  "homepage": "https://github.com/Btime/btime-migration#readme",
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "dotenv": "^6.0.0",
+    "fs": "0.0.1-security",
+    "moment": "^2.22.2",
+    "mongodb": "^3.1.6",
+    "pg": "^7.4.3",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.38.1",
+    "yargs": "^12.0.2"
+  },
+  "yargs": {
+    "duplicate-arguments-array": false
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint": "^5.5.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-mocha": "^5.2.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "husky": "^0.14.3",
+    "mocha": "^5.2.0",
+    "nyc": "^13.0.1"
+  }
+}

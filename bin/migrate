@@ -1,0 +1,15 @@
+#!/usr/bin/env node
+
+const { migrate } = require('./../src/migrate')
+const chalk = require('chalk')
+
+migrate()
+  .then(resume)
+  .catch(err => console.error(
+    chalk.bgRed(chalk.bold.yellow('FAILURE REASON')),
+    chalk.bold.red(err)
+  ))
+
+function resume (result) {
+  console.log(`\n${chalk.black.bgGreen('DONE')}`)
+}

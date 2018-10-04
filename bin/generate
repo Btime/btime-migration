@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+
+const { generate } = require('../src/generate')
+const chalk = require('chalk')
+
+generate()
+  .then(file => console.log(
+    `Generated new migration file: ${chalk.bold.green(file)}`
+  ))
+  .catch(err => console.error(chalk.bold.red(err.message)))
