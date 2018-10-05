@@ -1,1 +1,0 @@
-ALTER TABLE public.import ADD "errors" BOOLEAN NOT NULL default false;
