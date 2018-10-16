@@ -1,9 +1,10 @@
 module.exports.up = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
-      CREATE TABLE IF NOT EXISTS public."userGroup" (
+      CREATE TABLE IF NOT EXISTS public."userGroupAssociation" (
         "id" SERIAL,
-        "name" CHARACTER VARYING(255) NOT NULL,
+        "userId" INTEGER NOT NULL,
+        "groupId" INTEGER NOT NULL,
         "createdById" INTEGER,
         "deletedById" INTEGER,
         "enabled" BOOLEAN NOT NULL default true,
@@ -23,7 +24,7 @@ module.exports.up = (payload) => {
 module.exports.down = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
-    DROP TABLE public."userGroup";
+      DROP TABLE public."userGroupAssociation";
     `
 
     return payload.connection.instance
