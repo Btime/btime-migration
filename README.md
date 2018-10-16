@@ -67,6 +67,10 @@ Run coverage report
 
 	$ npm run coverage
 
+Run coverage report in HTML
+
+	$ npm run htmlCoverage
+
 ## Linting
 To scan the code base and "auto-fix" all that violates the defined lint rules, run:
 
