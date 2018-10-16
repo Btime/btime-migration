@@ -10,7 +10,11 @@ module.exports.up = (payload) => {
       "deleted" BOOLEAN NOT NULL default false,
       "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL,
       "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL
-    );`
+    );
+
+    ALTER TABLE public."userGroup"
+      ADD CONSTRAINT userGroup_pkey PRIMARY KEY(id);
+    `
 
     return payload.connection.instance
       .query(query)
@@ -21,7 +25,11 @@ module.exports.up = (payload) => {
 
 module.exports.down = (payload) => {
   return new Promise((resolve, reject) => {
-    const query = `DROP TABLE public."userGroup"`
+    const query = `
+    ALTER TABLE public."userGroup"
+      DROP CONSTRAINT userGroup_pkey;
+
+    DROP TABLE public."userGroup";`
 
     return payload.connection.instance
       .query(query)
