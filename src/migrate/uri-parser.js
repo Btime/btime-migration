@@ -5,7 +5,10 @@ const SUPPORTED_DRIVERS = {
     'sqlite',
     'mssql'
   ],
-  'nonsql': [ 'mongodb' ]
+  'nonsql': [
+    'mongodb',
+    'mongodb+srv'
+  ]
 }
 
 module.exports.parse = (uri) => {
