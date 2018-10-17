@@ -1,9 +1,7 @@
 module.exports.up = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
-    ALTER TABLE public."company"
-    ADD CONSTRAINT "company_avatarId_fkey" FOREIGN KEY ("avatarId")
-    REFERENCES public."document" (id) ON UPDATE CASCADE ON DELETE SET NULL;
+    ALTER TABLE public."company" ADD COLUMN "type" CHARACTER VARYING (32) NOT NULL;
     `
 
     return payload.connection.instance
@@ -16,8 +14,7 @@ module.exports.up = (payload) => {
 module.exports.down = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
-    ALTER TABLE public."company"
-    DROP CONSTRAINT IF EXISTS "company_avatarId_fkey";
+    ALTER TABLE public."company" DROP COLUMN IF EXISTS "type";
     `
 
     return payload.connection.instance

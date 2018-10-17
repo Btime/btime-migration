@@ -15,7 +15,7 @@ module.exports.up = (payload) => {
     );
 
     ALTER TABLE public."companyAddress"
-    ADD CONSTRAINT companyAddress_pkey PRIMARY KEY(id);
+    ADD CONSTRAINT "companyAddress_pkey" PRIMARY KEY(id);
     `
 
     return payload.connection.instance

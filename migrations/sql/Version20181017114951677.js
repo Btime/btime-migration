@@ -17,7 +17,7 @@ module.exports.down = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
     ALTER TABLE public."company"
-    DROP CONSTRAINT IF EXISTS company_deletedById_fkey;
+    DROP CONSTRAINT IF EXISTS "company_deletedById_fkey";
     `
 
     return payload.connection.instance
