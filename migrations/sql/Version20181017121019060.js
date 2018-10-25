@@ -1,16 +1,12 @@
 module.exports.up = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
-    CREATE TABLE IF NOT EXISTS public."userGroup" (
-      "id" SERIAL,
-      "name" CHARACTER VARYING(255) NOT NULL,
-      "createdById" INTEGER,
-      "deletedById" INTEGER,
-      "enabled" BOOLEAN NOT NULL default true,
-      "deleted" BOOLEAN NOT NULL default false,
-      "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL,
-      "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL
-    );
+    ALTER TABLE public."companyAddress"
+      DROP CONSTRAINT IF EXISTS "companyAddress_company_fkey";
+
+    ALTER TABLE public."companyAddress"
+      ADD CONSTRAINT "companyAddress_company_fkey" FOREIGN KEY ("companyId")
+      REFERENCES public."company" (id) ON UPDATE CASCADE ON DELETE SET NULL;
     `
 
     return payload.connection.instance
@@ -23,7 +19,8 @@ module.exports.up = (payload) => {
 module.exports.down = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
-    DROP TABLE IF EXISTS public."userGroup";
+    ALTER TABLE public."companyAddress"
+      DROP CONSTRAINT IF EXISTS "companyAddress_company_fkey";
     `
 
     return payload.connection.instance

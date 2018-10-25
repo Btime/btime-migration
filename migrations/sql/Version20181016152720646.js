@@ -1,8 +1,11 @@
 module.exports.up = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
-      ALTER TABLE public."userGroup"
-        ADD CONSTRAINT "userGroup_pkey" PRIMARY KEY(id);
+    ALTER TABLE public."userGroup"
+      DROP CONSTRAINT IF EXISTS "userGroup_pkey";
+
+    ALTER TABLE public."userGroup"
+      ADD CONSTRAINT "userGroup_pkey" PRIMARY KEY(id);
     `
 
     return payload.connection.instance
@@ -15,8 +18,8 @@ module.exports.up = (payload) => {
 module.exports.down = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
-      ALTER TABLE public."userGroup"
-        DROP CONSTRAINT "userGroup_pkey";
+    ALTER TABLE public."userGroup"
+      DROP CONSTRAINT IF EXISTS "userGroup_pkey";
     `
 
     return payload.connection.instance

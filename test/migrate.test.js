@@ -80,7 +80,7 @@ describe('Migrate tests', () => {
       expect(stderr.length).to.equal(0)
 
       const workspacesCount = (stdout.match(/(Resume)/g) || []).length
-      expect(workspacesCount).to.be.gt(1)
+      expect(workspacesCount).to.be.at.least(1)
       done(null)
     })
   })
