@@ -2,7 +2,7 @@ module.exports.up = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
     ALTER TABLE public."company"
-      ADD COLUMN "type" CHARACTER VARYING (32) NOT NULL;
+      ADD COLUMN IF NOT EXISTS "type" CHARACTER VARYING (32) NOT NULL;
     `
 
     return payload.connection.instance

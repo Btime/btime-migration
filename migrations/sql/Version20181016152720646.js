@@ -1,11 +1,16 @@
 module.exports.up = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
-    ALTER TABLE public."userGroup"
-      DROP CONSTRAINT IF EXISTS "userGroup_pkey";
-
-    ALTER TABLE public."userGroup"
-      ADD CONSTRAINT "userGroup_pkey" PRIMARY KEY(id);
+    DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint WHERE conname = 'userGroup_pkey'
+        ) THEN
+          ALTER TABLE public."userGroup"
+            ADD CONSTRAINT "userGroup_pkey" PRIMARY KEY(id);
+        END IF;
+      END;
+    $$;
     `
 
     return payload.connection.instance

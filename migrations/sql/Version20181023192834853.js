@@ -2,7 +2,7 @@ module.exports.up = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
     ALTER TABLE public."refund"
-    ADD COLUMN "companyId" INTEGER DEFAULT NULL
+    ADD COLUMN IF NOT EXISTS "companyId" INTEGER DEFAULT NULL
     `
 
     return payload.connection.instance

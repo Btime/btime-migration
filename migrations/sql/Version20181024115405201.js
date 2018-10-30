@@ -13,11 +13,16 @@ module.exports.up = (payload) => {
       "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL
     );
 
-    ALTER TABLE public."customerCompany"
-    DROP CONSTRAINT IF EXISTS "customerCompany_pkey";
-
-    ALTER TABLE public."customerCompany"
-    ADD CONSTRAINT "customerCompany_pkey" PRIMARY KEY (id);
+    DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint WHERE conname = 'customerCompany_pkey'
+        ) THEN
+          ALTER TABLE public."customerCompany"
+            ADD CONSTRAINT "customerCompany_pkey" PRIMARY KEY(id);
+        END IF;
+      END;
+    $$;
     `
 
     return payload.connection.instance
