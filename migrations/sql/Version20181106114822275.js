@@ -1,7 +1,8 @@
 module.exports.up = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
-    ALTER TABLE public."company" ALTER COLUMN "phoneNumber" DROP NOT NULL;
+    ALTER TABLE public."company"
+      ALTER COLUMN "phoneNumber" DROP NOT NULL;
     `
 
     return payload.connection.instance

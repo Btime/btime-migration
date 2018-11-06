@@ -1,10 +1,8 @@
 module.exports.up = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
-    DROP TABLE public."userGroupAssociation";
-
     ALTER TABLE public."user"
-    ADD COLUMN IF NOT EXISTS "groupId" INTEGER;
+      ADD COLUMN IF NOT EXISTS "groupId" INTEGER;
 
     ALTER TABLE public."user"
       ADD CONSTRAINT "user_groupId_fkey" FOREIGN KEY ("groupId")
