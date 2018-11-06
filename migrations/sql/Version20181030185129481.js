@@ -1,11 +1,16 @@
 module.exports.up = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
-    ALTER TABLE public."minicrud"
-      ADD COLUMN "entity" CHARACTER VARYING (255) DEFAULT 'name' NOT NULL;
+    ALTER TABLE public."user"
+      ADD COLUMN IF NOT EXISTS "groupId" INTEGER;
 
-    ALTER TABLE public."minicrud"
-      ADD COLUMN "originalId" INTEGER;`
+    ALTER TABLE public."user"
+      DROP CONSTRAINT "user_groupId_fkey";
+
+    ALTER TABLE public."user"
+      ADD CONSTRAINT "user_groupId_fkey" FOREIGN KEY ("groupId")
+      REFERENCES public."minicrud" (id) ON UPDATE CASCADE ON DELETE SET NULL;
+    `
 
     return payload.connection.instance
       .query(query)
@@ -16,12 +21,7 @@ module.exports.up = (payload) => {
 
 module.exports.down = (payload) => {
   return new Promise((resolve, reject) => {
-    const query = `
-    ALTER TABLE public."minicrud"
-      DROP COLUMN IF EXISTS "entity";
-
-    ALTER TABLE public."minicrud"
-      DROP COLUMN IF EXISTS "originalId";`
+    const query = ``
 
     return payload.connection.instance
       .query(query)
