@@ -21,6 +21,7 @@ module.exports.up = (payload) => {
     DROP TABLE public."serviceTransport";
     DROP TABLE public."serviceType";
     DROP TABLE public."unproductive";
+    DROP TABLE public."userGroupAssociation";
     DROP TABLE public."userGroup";
     DROP TABLE public."validated";
     `
