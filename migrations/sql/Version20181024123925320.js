@@ -22,8 +22,11 @@ module.exports.up = (payload) => {
 module.exports.down = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
-    ALTER TABLE public."serviceOrder" DROP CONSTRAINT IF EXISTS "serviceOrder_parentId_fkey";
-    ALTER TABLE public."serviceOrder" DROP COLUMN IF EXISTS "parentId";
+    ALTER TABLE public."serviceOrder"
+      DROP CONSTRAINT IF EXISTS "serviceOrder_parentId_fkey";
+
+    ALTER TABLE public."serviceOrder"
+      DROP COLUMN IF EXISTS "parentId";
     `
 
     return payload.connection.instance
