@@ -38,7 +38,7 @@ module.exports.up = (payload) => {
               configurations = configurations.concat([ "type" ]);
               break;
             case 'serviceOrder':
-              configurations = configurations.concat([ "resume", "view", "validated", "approved", "canceled", "rescheduling", "transport", "unproductive", "pending" ]);
+              configurations = configurations.concat([ "resume", "view", "validated", "approved", "disapproved", "canceled", "rescheduling", "transport", "unproductive", "pending" ]);
               break;
             case 'refund':
               configurations = configurations.concat([ "view", "paid", "type", "paymentType" ]);
@@ -66,7 +66,7 @@ module.exports.up = (payload) => {
       db.modules.find({ name: { "$in" : nonDefaultModules } }).forEach(module => db.modules.update({ name: module.name, deleted: false }, { "$set": { default: false } }, { multi: true }));
       
       const listSubmodules = [ "new", "export", "import" ];
-      const actionSubmodules = [ "edit", "deleted", "resume", "view", "validated", "approved", "canceled", "rescheduling", "paid" ];
+      const actionSubmodules = [ "edit", "deleted", "resume", "view", "validated", "approved", "disapproved", "canceled", "rescheduling", "paid" ];
       const registerSubmodules = [ "group", "segment", "wallet", "requesterDepartment", "requesterRole", "type", "transport", "unproductive", "pending", "paymentType", "brand", "model", "company", "contract" ];
       
       listSubmodules.forEach(submodule => db.module_role_configurations.update({ name: submodule }, { "$set": { type: "list" } }, { multi: true }));
