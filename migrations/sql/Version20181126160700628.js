@@ -2,7 +2,7 @@ module.exports.up = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
       CREATE TABLE public."serviceOrderDisapproved" (
-        id integer NOT NULL,
+        "id" SERIAL,
         "serviceOrderId" integer,
         "disapprovedId" integer,
         description text,
