@@ -38,7 +38,7 @@ module.exports.up = (payload) => {
               configurations = configurations.concat([ "type" ]);
               break;
             case 'serviceOrder':
-              configurations = configurations.concat([ "resume", "view", "validated", "approved", "disapproved", "canceled", "rescheduling", "transport", "unproductive", "pending" ]);
+              configurations = configurations.concat([ "resume", "view", "validated", "history", "approved", "canceled", "rescheduling", "transport", "unproductive", "pending" ]);
               break;
             case 'refund':
               configurations = configurations.concat([ "view", "paid", "type", "paymentType" ]);

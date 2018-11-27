@@ -32,6 +32,9 @@ module.exports.up = (payload) => {
       ALTER TABLE public."serviceOrderDisapproved"
         ADD CONSTRAINT "serviceOrderDisapproved_deletedById_fkey" FOREIGN KEY ("deletedById")
         REFERENCES public."user" (id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+      INSERT INTO public."serviceStatus" (id, name, enabled, deleted, "createdAt", "updatedAt")
+        VALUES (11, 'approved', true, false, NOW(), NOW()), (12, 'disapproved', true, false, NOW(), NOW());
     `
 
     return payload.connection.instance
@@ -45,6 +48,7 @@ module.exports.down = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
       DROP TABLE public."serviceOrderDisapproved";
+      DELETE FROM public."serviceStatus" WHERE id = 11 OR id = 12;
     `
 
     return payload.connection.instance
