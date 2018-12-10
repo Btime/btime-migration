@@ -8,6 +8,7 @@ module.exports.up = (payload) => {
       const roleIds = [ 1, 2, 3, 4 ];
       const skillModuleName = "skill";
       const skillConfigurations = [ "user", "customer" ];
+      const OTHER_TYPE = "other"
 
       db.workspaces.find({ deleted: false }).forEach(workspace => {
         modules.forEach(moduleName => {
@@ -68,7 +69,7 @@ module.exports.up = (payload) => {
                 const configurationCount = db.module_role_configurations.find({ name: configuration, moduleRole: moduleRole._id }).count();
 
                 if (configurationCount === 0) {
-                  db.module_role_configurations.insert({ name: configuration, moduleRole: moduleRole._id, enabled: false, deleted: false, createdAt: new Date() });
+                  db.module_role_configurations.insert({ name: configuration, moduleRole: moduleRole._id, enabled: false, deleted: false, createdAt: new Date(), type: OTHER_TYPE });
                 }
               });
             });
@@ -81,7 +82,8 @@ module.exports.up = (payload) => {
 
       const listSubmodules = [ "new", "export", "import" ];
       const actionSubmodules = [ "edit", "deleted", "resume", "view", "validated", "approved", "disapproved", "canceled", "rescheduling", "paid" ];
-      const registerSubmodules = [ "group", "segment", "wallet", "requesterDepartment", "requesterRole", "type", "transport", "unproductive", "pending", "paymentType", "brand", "model", "company", "contract" ];
+      const registerSubmodules = [ "group", "segment", "wallet", "requesterDepartment", "requesterRole", "type",
+      "transport", "unproductive", "pending", "paymentType", "brand", "model", "company", "contract" ];
 
       listSubmodules.forEach(submodule => db.module_role_configurations.update({ name: submodule }, { "$set": { type: "list" } }, { multi: true }));
       actionSubmodules.forEach(submodule => db.module_role_configurations.update({ name: submodule }, { "$set": { type: "action" } }, { multi: true }));
