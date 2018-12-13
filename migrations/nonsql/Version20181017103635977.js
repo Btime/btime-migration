@@ -1,9 +1,9 @@
 module.exports.up = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
-      const modules = [ "dashboard", "user", "customer", "checkList", "serviceOrder", "refund", "map", "fleet", "company", "skill" ];
+      const modules = [ "dashboard", "user", "customer", "checkList", "serviceOrder", "refund", "map", "fleet", "company", "skill", "calendar" ];
       const defaultModules = [ "dashboard", "user", "customer", "checkList", "serviceOrder" ];
-      const nonDefaultModules = [ "refund", "map", "fleet", "company", "skill" ];
+      const nonDefaultModules = [ "refund", "map", "fleet", "company", "skill", "calendar" ];
       const configurableModules = [ "user", "customer", "checkList", "serviceOrder", "refund", "fleet", "company" ];
       const roleIds = [ 1, 2, 3, 4 ];
       const skillModuleName = "skill";
