@@ -35,7 +35,7 @@ module.exports.up = (payload) => {
               configurations = configurations.concat([ "group", "segment", "wallet", "requesterDepartment", "requesterRole" ]);
               break;
             case 'checkList':
-              configurations = configurations.concat([ "type" ]);
+              configurations = configurations.concat([ "type", "clone" ]);
               break;
             case 'serviceOrder':
               configurations = configurations.concat([ "resume", "view", "validated", "history", "approved", "canceled", "rescheduling", "transport", "unproductive", "pending" ]);
@@ -69,7 +69,7 @@ module.exports.up = (payload) => {
       db.modules.find({ name: { "$in" : nonDefaultModules } }).forEach(module => db.modules.update({ name: module.name, deleted: false }, { "$set": { default: false } }, { multi: true }));
 
       const listSubmodules = [ "new", "export", "import" ];
-      const actionSubmodules = [ "edit", "deleted", "resume", "view", "validated", "approved", "disapproved", "canceled", "rescheduling", "paid" ];
+      const actionSubmodules = [ "edit", "deleted", "resume", "view", "validated", "approved", "disapproved", "canceled", "rescheduling", "paid", "clone" ];
       const registerSubmodules = [ "group", "segment", "wallet", "requesterDepartment", "requesterRole", "type",
       "transport", "unproductive", "pending", "paymentType", "brand", "model", "company", "contract" ];
       const otherSubmodules = [ "ownedSOOnly", "user", "customer" ];
