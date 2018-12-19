@@ -2,22 +2,13 @@ module.exports.up = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
     ALTER TABLE public."checkList"
-    ALTER COLUMN "photoEnabled" DROP NOT NULL;
+    ALTER COLUMN "photoEnabled" SET DEFAULT FALSE;
 
     ALTER TABLE public."checkList"
-    ALTER COLUMN "photoEnabled" SET DEFAULT NULL;
+    ALTER COLUMN "confidential" SET DEFAULT FALSE;
 
     ALTER TABLE public."checkList"
-    ALTER COLUMN "confidential" DROP NOT NULL;
-
-    ALTER TABLE public."checkList"
-    ALTER COLUMN "confidential" SET DEFAULT NULL;
-
-    ALTER TABLE public."checkList"
-    ALTER COLUMN "annotationEnabled" DROP NOT NULL;
-
-    ALTER TABLE public."checkList"
-    ALTER COLUMN "annotationEnabled" SET DEFAULT NULL;
+    ALTER COLUMN "annotationEnabled" SET DEFAULT FALSE;
     `
 
     return payload.connection.instance
@@ -31,13 +22,13 @@ module.exports.down = (payload) => {
   return new Promise((resolve, reject) => {
     const query = `
     ALTER TABLE public."checkList"
-    ALTER COLUMN "photoEnabled" TYPE BOOLEAN;
+    ALTER COLUMN "photoEnabled" SET DEFAULT NULL;
 
     ALTER TABLE public."checkList"
-    ALTER COLUMN "confidential" TYPE BOOLEAN;
+    ALTER COLUMN "confidential" SET DEFAULT NULL;
 
     ALTER TABLE public."checkList"
-    ALTER COLUMN "annotationEnabled" TYPE BOOLEAN;
+    ALTER COLUMN "annotationEnabled" SET DEFAULT NULL;
     `
 
     return payload.connection.instance
