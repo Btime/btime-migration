@@ -4,7 +4,7 @@ module.exports.up = (payload) => {
       const modules = [ "dashboard", "user", "customer", "checkList", "serviceOrder", "refund", "map", "fleet", "company", "skill", "calendar", "userCustomerRelation" ];
       const defaultModules = [ "dashboard", "user", "customer", "checkList", "serviceOrder" ];
       const nonDefaultModules = [ "refund", "map", "fleet", "company", "skill", "calendar", "userCustomerRelation" ];
-      const configurableModules = [ "user", "customer", "checkList", "serviceOrder", "refund", "fleet", "company", "skills" ];
+      const configurableModules = [ "user", "customer", "checkList", "serviceOrder", "refund", "fleet", "company", "skill" ];
       const roleIds = [ 1, 2, 3, 4 ];
 
       db.workspaces.find({ deleted: false }).forEach(workspace => {
@@ -46,7 +46,7 @@ module.exports.up = (payload) => {
             case 'fleet':
               configurations = configurations.concat([ "type", "brand", "model", "company", "contract" ]);
               break;
-            case 'skills':
+            case 'skill':
               configurations = [ "user", "customer" ];
               break;
           }
