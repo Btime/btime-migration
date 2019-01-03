@@ -70,6 +70,18 @@ describe('Migrate tests', () => {
       })
     })
 
+  it(`Expect failure when environment file (-e) is not found`, done => {
+    const env = 'not-found.env'
+    const workdir = 'test/mocks/migrate/empty-dir/'
+
+    exec(`${migrate} -t sql -e ${env} -w ${workdir}`, (err, stdout, stderr) => {
+      expect(err).to.equal(null)
+      expect(stdout.length).to.equal(0)
+      expect(stderr.length).to.not.equal(0)
+      done(null)
+    })
+  })
+
   it(`Expect multiple workspaces to be affected when utilizing
   the "multiple" flag (-m)`, (done) => {
     const customDir = 'test/mocks/migrate/multiple-workspaces'

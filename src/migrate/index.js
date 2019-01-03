@@ -1,7 +1,6 @@
 'use strict'
 
-require('dotenv').config()
-
+const env = require('../env')
 const { argv } = require('./argv')
 const Logger = require('./../logger')
 const Filename = require('./../filename')
@@ -12,7 +11,8 @@ const DriverFactory = require('../drivers/factory')
 
 module.exports.migrate = () => {
   return new Promise((resolve, reject) => {
-    return FileManager.getFiles(argv)
+    return env.init(argv)
+      .then(FileManager.getFiles)
       .then(mapWorkspaces)
       .then(apply)
       .then(resolve)
@@ -130,7 +130,7 @@ function rollbackVersions (payload) {
       Logger.workspace(payload)
 
       for (const version of payload.versionsToRollback) {
-        const { type, connection, driver, uri, workdir } = payload
+        const { type, connection, driver, uri, workdir, env } = payload
 
         await rollback({
           type,
@@ -141,7 +141,8 @@ function rollbackVersions (payload) {
           options: {
             closeConnection: false
           },
-          workdir
+          workdir,
+          env
         })
       }
       return resolve(payload)

@@ -25,6 +25,11 @@ module.exports.argv = (() => {
       describe: 'Bulk-migrate process for each available workspace',
       type: 'boolean'
     })
+    .option('env', {
+      alias: 'e',
+      describe: 'Path to locate the environment variables file',
+      type: 'string'
+    })
     .demandOption([ 'type' ])
     .argv
 })()

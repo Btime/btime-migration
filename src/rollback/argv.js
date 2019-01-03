@@ -30,6 +30,11 @@ module.exports.argv = () => {
       describe: 'Bulk-rollback process for each available workspace',
       type: 'boolean'
     })
+    .option('env', {
+      alias: 'e',
+      describe: 'Path to locate the environment variables file',
+      type: 'string'
+    })
     .demandOption([ 'version' ])
     .argv
 }
