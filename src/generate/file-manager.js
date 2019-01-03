@@ -21,11 +21,8 @@ module.exports.create = (argv) => {
 }
 
 function resolveFilePath (payload) {
-  let filePath = path.join(__dirname, '..', '..', 'migrations', payload.type)
-
-  if (payload.workdir) {
-    filePath = path.join(process.cwd(), payload.workdir)
-  }
+  const filePath = payload.workdir ||
+    path.join(__dirname, '..', '..', 'migrations', payload.type)
 
   return path.join(filePath, Filename.generate())
 }

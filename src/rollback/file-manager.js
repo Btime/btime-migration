@@ -26,8 +26,6 @@ module.exports.getByVersion = (payload) => {
 }
 
 function getFilePath (payload) {
-  if (payload.workdir) {
-    return path.join(process.cwd(), payload.workdir)
-  }
-  return path.join(__dirname, '..', '..', 'migrations', payload.type)
+  return payload.workdir ||
+    path.join(__dirname, '..', '..', 'migrations', payload.type)
 }

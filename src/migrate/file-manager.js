@@ -6,7 +6,7 @@ module.exports.getFiles = (payload) => {
     let path = join(__dirname, '..', '..', 'migrations', payload.type)
 
     if (payload.workdir) {
-      path = join(process.cwd(), payload.workdir)
+      path = payload.workdir
     }
 
     fs.readdir(path, (err, files) => {
