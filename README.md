@@ -2,22 +2,28 @@
 
 ## :books: Table of Contents
 
-1. [Setup](#setup)
+1. [Installation](#installation)
 1. [Usage](#usage)
 1. [Testing](#testing)
 1. [Linting](#linting)
 
-## **Setup**
-### Copy enviroment file and configure the variables
-	$ cp .env.dist .env
+## **Installation**
+### NPM Repository
+	$ npm i -S @btime/migration
 
-### Install dependencies
-	$ npm i
+### GitHub Repository
+	$ npm i -S github:Btime/btime-migration
+
+### Copy the enviroment file to your project root and configure it
+	$ cp ./{PACKAGE_ROOT}/.env.dist {PROJECT_ROOT}/.env
+
+:bulb: **TIP** Both **_migrate_** and **_rollback_** allows for the specification of a **custom env file**,
+through the **`--env`** flag.
 
 ## **Usage**
 ### **Generating a migration**
 
-	$ ./bin/generate -t sql
+	$ generate -t sql
 
 > **Example output:** _Generated new migration file: /home/user/projects/btime-migration/migrations/Version**20181002114415382**.js_
 
@@ -25,51 +31,43 @@ All run migrations get **versioned**, based on it's name - which reflects a uniq
 
 By default, migration files are created at **`./migrations`** (project root). You can specify a custom directory by utilizing the **`--workdir`** flag:
 
-	$ ./bin/generate -t sql --workdir ./custom-mirations-dir
+	$ generate -t sql --workdir ./custom-mirations-dir
 > The *generate*, *migrate* and *rollback* commands support a custom directory to be specified.
 
-:information_source: **Important**	The directory must exist in order to be used.
+:information_source: **IMPORTANT**	The directory must exist in order to be used.
 
 ### **Running migrations**
 
-	$ ./bin/migrate
+	$ migrate
 
 The above command **will run (_up_)** all migration files, considering default options (flags).
 
 ### Hitting multiple databases
 The migration process might target multiple databases through the *`"--multiple"`* flag.
 
-	$ ./bin/migrate --multiple
+	$ migrate --multiple
 
-:information_source: **Important** Environment variables prefixed with _"MULTIPLE\__" are used in order to find target databases.
+:information_source: **IMPORTANT** Environment variables prefixed with _"MULTIPLE\__" are used in order to find target databases.
 
 ### **Rolling back migrations**
 
-	$ ./bin/rollback --version [version]
+	$ rollback --version [version]
 
 The above command **will run (down)** the specified migration, considering default options (flags).
 
 Just like the _migrate_ command, you can make use of the **`--multiple`** flag and target multiple databases:
 
-	$ ./bin/rollback --version [version] --multiple
+	$ rollback --version [version] --multiple
 
 _All commands come with a **`--help`** flag, which displays useful information about it's usage options._
 
 ## Testing
 
-Tests are run using [Mocha](https://mochajs.org) and [Chai](https://www.chaijs.com).
+Tests are run using [Mocha](https://mochajs.org) and [Chai](https://www.chaijs.com). Coverage is provided by [Istanbul CLI](https://github.com/istanbuljs/nyc).
 
-Run test suite
+Run test suite (coverage included)
 
-	$ npm run test
-
-Run coverage report
-
-	$ npm run coverage
-
-Run coverage report in HTML
-
-	$ npm run htmlCoverage
+	$ npm test
 
 ## Linting
 To scan the code base and "auto-fix" all that violates the defined lint rules, run:
