@@ -21,6 +21,19 @@
 through the **`--env`** flag.
 
 ## **Usage**
+To facilitate the use of this CLI tool, you might install it globally or map
+its commands to the _package.json scripts_, as follows:
+
+```json
+"scripts": {
+    "generate": "./node_modules/.bin/generate",
+    "migrate": "./node_modules/.bin/migrate",
+    "rollback": "./node_modules/.bin/rollback"
+}
+```
+:information_source: **IMPORTANT** Don't forget that the mapping above requires
+you to invoke such scripts as **npm run \<script>**. [More on NPM scripts](https://docs.npmjs.com/cli/run-script).
+
 ### **Generating a migration**
 
 	$ generate -t sql
