@@ -1,13 +1,10 @@
 const fs = require('fs')
 const { join } = require('path')
+const { migrationsPath } = require('../migrations-path')
 
 module.exports.getFiles = (payload) => {
   return new Promise((resolve, reject) => {
-    let path = join(__dirname, '..', '..', 'migrations', payload.type)
-
-    if (payload.workdir) {
-      path = payload.workdir
-    }
+    const path = migrationsPath(payload)
 
     fs.readdir(path, (err, files) => {
       if (err) return reject(err)

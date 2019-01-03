@@ -1,8 +1,9 @@
 'use strict'
 
 const fs = require('fs')
-const path = require('path')
+const { join } = require('path')
 const Filename = require('./../filename')
+const { migrationsPath } = require('../migrations-path')
 
 module.exports.create = (argv) => {
   return new Promise((resolve, reject) => {
@@ -21,8 +22,5 @@ module.exports.create = (argv) => {
 }
 
 function resolveFilePath (payload) {
-  const filePath = payload.workdir ||
-    path.join(__dirname, '..', '..', 'migrations', payload.type)
-
-  return path.join(filePath, Filename.generate())
+  return join(migrationsPath(payload), Filename.generate())
 }
