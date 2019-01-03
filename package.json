@@ -6,7 +6,9 @@
     "node": ">=8.9.0"
   },
   "files": [
-    "src"
+    "src",
+    "bin",
+    ".env.dist"
   ],
   "bin": {
     "generate": "./bin/generate",
