@@ -90,7 +90,7 @@ describe('Generate tests', () => {
         expect(stdout.length).to.not.equal(0)
         expect(stderr.length).to.equal(0)
 
-        const filePathPattern = new RegExp(/\/([a-z0-9/\-.]*\.js)/, 'gi')
+        const filePathPattern = new RegExp(/\/?([a-z0-9/\-.]*\.js)/, 'gi')
 
         const matches = filePathPattern.exec(stdout)
 

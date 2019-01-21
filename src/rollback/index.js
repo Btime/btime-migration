@@ -1,7 +1,6 @@
 'use strict'
 
-require('dotenv').config()
-
+const env = require('../env')
 const { argv } = require('./argv')
 const Logger = require('../logger')
 const FileManager = require('./file-manager')
@@ -11,7 +10,8 @@ const { OPTIONS } = require('./options')
 
 module.exports.rollback = (payload) => {
   return new Promise((resolve, reject) => {
-    return mergePayloadOptions(payload || argv())
+    return env.init(payload || argv())
+      .then(mergePayloadOptions)
       .then(Workspace.getDatabaseUris)
       .then(FileManager.getByVersion)
       .then(apply)

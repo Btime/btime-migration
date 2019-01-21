@@ -1,10 +1,11 @@
 const fs = require('fs')
-const path = require('path')
+const { join } = require('path')
 const { PATTERN } = require('./../filename')
+const { migrationsPath } = require('../migrations-path')
 
 module.exports.getByVersion = (payload) => {
   return new Promise((resolve, reject) => {
-    const filePath = getFilePath(payload)
+    const filePath = migrationsPath(payload)
 
     fs.readdir(filePath, (error, files) => {
       if (error) return reject(error)
@@ -20,14 +21,7 @@ module.exports.getByVersion = (payload) => {
           `The specified version could not be found: ${version} (work dir: ${filePath})`
         ))
       }
-      return resolve({ ...payload, file: path.join(filePath, file) })
+      return resolve({ ...payload, file: join(filePath, file) })
     })
   })
-}
-
-function getFilePath (payload) {
-  if (payload.workdir) {
-    return path.join(process.cwd(), payload.workdir)
-  }
-  return path.join(__dirname, '..', '..', 'migrations', payload.type)
 }

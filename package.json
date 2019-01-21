@@ -6,13 +6,18 @@
     "node": ">=8.9.0"
   },
   "files": [
-    "src"
+    "src",
+    "bin",
+    ".env.dist"
   ],
+  "bin": {
+    "generate": "./bin/generate",
+    "migrate": "./bin/migrate",
+    "rollback": "./bin/rollback"
+  },
   "scripts": {
-    "test": "mocha --timeout 3600000 --exit",
-    "fixStyle": "./node_modules/eslint/bin/eslint.js ./ --fix",
-    "coverage": "nyc mocha --timeout 3600000 --exit",
-    "htmlCoverage": "nyc --reporter=html mocha --exit"
+    "test": "LOG_LEVEL=error nyc --check-coverage --lines 75 --functions 75 --reporter=html --reporter=text mocha test/*.test.js --exit --timeout 555555",
+    "fixStyle": "./node_modules/eslint/bin/eslint.js ./ --fix"
   },
   "husky": {
     "hooks": {

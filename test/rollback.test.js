@@ -91,6 +91,20 @@ describe('Rollback tests', () => {
       })
   })
 
+  it(`Expect failure when environment file (-e) is not found`, done => {
+    const env = 'not-found.env'
+    const workdir = 'test/mocks/migrate/custom-dir'
+
+    exec(`${rollback} -v 20180918110551011 -e ${env} -w ${workdir}`,
+      (err, stdout, stderr) => {
+        expect(err).to.equal(null)
+        expect(stdout.length).to.equal(0)
+        expect(stderr.length).to.not.equal(0)
+        done(null)
+      }
+    )
+  })
+
   it('Expect ran migration (from custom work dir) to rollback', done => {
     const customDir = 'test/mocks/migrate/custom-dir'
 
