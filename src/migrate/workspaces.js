@@ -1,9 +1,4 @@
 const { MongoClient } = require('mongodb')
-const MULTIPLE = {
-  uri: process.env.MULTIPLE_URI,
-  collection: process.env.MULTIPLE_COLLECTION,
-  column: process.env.MULTIPLE_COLLECTION_COLUMN
-}
 
 module.exports.getDatabaseUris = (payload) => {
   return new Promise((resolve, reject) => {
@@ -28,20 +23,20 @@ module.exports.getDatabaseUris = (payload) => {
 
 function getMultiple () {
   return new Promise((resolve, reject) => {
-    return MongoClient.connect(MULTIPLE.uri, {
+    return MongoClient.connect(process.env.MULTIPLE_URI, {
       useNewUrlParser: true
     }, (err, client) => {
       if (err) return reject(err)
 
       return client.db()
-        .collection(MULTIPLE.collection)
+        .collection(process.env.MULTIPLE_COLLECTION)
         .find({ deleted: false })
-        .project({ [MULTIPLE.column]: 1 })
+        .project({ [process.env.MULTIPLE_COLLECTION_COLUMN]: 1 })
         .toArray((error, entities) => {
           if (error) return reject(error)
 
           const databaseUris = [ ...new Set(entities.map(
-            (entity) => entity[MULTIPLE.column]
+            (entity) => entity[process.env.MULTIPLE_COLLECTION_COLUMN]
           )) ]
 
           client.close()
