@@ -16,7 +16,8 @@
     "rollback": "./bin/rollback"
   },
   "scripts": {
-    "test": "LOG_LEVEL=error nyc --check-coverage --lines 75 --functions 75 --reporter=html --reporter=text mocha test/*.test.js --exit --timeout 555555",
+    "test": "LOG_LEVEL=error ./node_modules/nyc/bin/nyc.js --check-coverage --lines 75 --functions 75 --reporter=html --reporter=text mocha test/*.test.js --exit --timeout 555555",
+    "test-debugger": "LOG_LEVEL=error TIMEOUT=1000000 TRANSPORT_TYPE=amqp mocha --inspect-brk=9334 -S test/*.test.js --exit --timeout 0",   
     "fixStyle": "./node_modules/eslint/bin/eslint.js ./ --fix"
   },
   "husky": {

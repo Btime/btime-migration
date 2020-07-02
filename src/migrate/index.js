@@ -9,37 +9,27 @@ const { rollback } = require('../rollback')
 const FileManager = require('./file-manager')
 const DriverFactory = require('../drivers/factory')
 
-module.exports.migrate = () => {
-  return new Promise((resolve, reject) => {
-    return env.init(argv)
-      .then(FileManager.getFiles)
-      .then(mapWorkspaces)
-      .then(apply)
-      .then(resolve)
-      .catch(reject)
-  })
-}
+module.exports.migrate = () =>
+  env.init(argv)
+    .then(FileManager.getFiles)
+    .then(mapWorkspaces)
 
-function mapWorkspaces (payload) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      payload = await Workspaces.getDatabaseUris(payload)
+async function mapWorkspaces (payload) {
+  payload = await Workspaces.getDatabaseUris(payload)
 
-      const workspaces = await Promise.all(payload.databaseUris.map(uri => {
-        return prepareDatabase({ ...payload, uri })
-          .then(payload => payload.driver.getStartingPointVersion(payload))
-          .then(payload => {
-            const { driver, connection, startingPointVersion } = payload
+  for (let i = 0; i < payload.databaseUris.length; i++) {
+    const uri = payload.databaseUris[i]
+    await prepareDatabase({ ...payload, uri })
+      .then(payload => payload.driver.getStartingPointVersion(payload))
+      .then(payload => {
+        const { driver, connection, startingPointVersion } = payload
+        return { uri, driver, connection, startingPointVersion }
+      })
 
-            return { uri, driver, connection, startingPointVersion }
-          })
-      }))
+      .then(workspace => apply({ ...payload, workspace }))
+  }
 
-      return resolve({ ...payload, workspaces })
-    } catch (error) {
-      return reject(error)
-    }
-  })
+  return { ...payload }
 }
 
 function prepareDatabase (payload) {
@@ -52,29 +42,21 @@ function prepareDatabase (payload) {
   })
 }
 
-function apply (payload) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      for (const workspace of payload.workspaces) {
-        await migrateWorkspace({ ...payload, ...workspace })
-      }
-      return resolve(payload)
-    } catch (error) {
-      Logger.migrationFailed()
+async function apply (payload) {
+  try {
+    await migrateWorkspace({ ...payload, ...payload.workspace })
+    return payload
+  } catch (error) {
+    Logger.migrationFailed()
 
-      for (const workspace of payload.workspaces) {
-        await workspace.driver
-          .getVersionsToRollback({ ...payload, ...workspace })
-          .then(rollbackVersions)
-          .then(() => console.log())
-      }
-      return reject(error)
-    } finally {
-      for (const workspace of payload.workspaces) {
-        workspace.connection.instance.close()
-      }
-    }
-  })
+    await payload.workspace.driver
+      .getVersionsToRollback({ ...payload, ...payload.workspace })
+      .then(rollbackVersions)
+
+    throw error
+  } finally {
+    payload.workspace.connection.instance.close()
+  }
 }
 
 function migrateWorkspace (payload) {
